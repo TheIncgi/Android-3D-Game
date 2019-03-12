@@ -1,0 +1,20 @@
+uniform mat4 modelViewMatrix;
+uniform mat3 normalMatrix;
+uniform vec3 lightDirection;
+
+attribute vec4 a_vertex;
+attribute vec3 a_normal;
+attribute cec2 a_texCoord;
+
+varying float v_diffuse;
+varying vec2  v_texCoord;
+
+void main(){
+    //put vertex normal into eyeCoords ?
+    vec3 ec_normal = normalize(normalMatrix * a_normal);
+
+    //emit diffuse scale factor, texcoord, and position
+    v_diffuse = max(dot( lightDirection, ec_nomral), 0.0);
+    v_texCoord = a_texCoord;
+    gl_Position = modelViewMatrix * a_vertex;
+}
