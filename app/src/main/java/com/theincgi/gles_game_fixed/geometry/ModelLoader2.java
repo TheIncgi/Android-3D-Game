@@ -9,6 +9,7 @@ import android.util.Log;
 import com.theincgi.gles_game_fixed.render.GLProgram;
 import com.theincgi.gles_game_fixed.render.GLPrograms;
 import com.theincgi.gles_game_fixed.utils.Color;
+import com.theincgi.gles_game_fixed.utils.GLErrorLogger;
 import com.theincgi.gles_game_fixed.utils.Location;
 import com.theincgi.gles_game_fixed.utils.Utils;
 
@@ -214,19 +215,19 @@ public class ModelLoader2 {
         String name;
         FloatBuffer vCoords, tCoords, nCoords;
         MaterialGroup[]  groups;
-        Color color = new Color(1f,.5f,.5f);
+
         boolean smoothShading = false;
 
         public void draw(float[] mvpm, GLProgram program){
             int posH   = program.getAttribLocation("vPosition"); //positionHandle
-            int colorH = program.getUniformAttribLocation("vColor");
+
             int mvpmH  = program.getUniformLocation("mvpm");
 
             GLES20.glEnableVertexAttribArray(posH);
             GLES20.glVertexAttribPointer(posH, 3, GLES20.GL_FLOAT,
                         false, 3*Float.SIZE, vCoords);
             GLES20.glUniformMatrix4fv(mvpmH, 1, false, mvpm,0 );
-            GLES20.glUniform4fv(colorH, 1, color.array(), 0);
+            GLErrorLogger.check();
             for(MaterialGroup materialGroup : groups){
 
                 materialGroup.draw(program);
@@ -244,7 +245,13 @@ public class ModelLoader2 {
         int points;
 
         public void draw(GLProgram program){
+            GLErrorLogger.check();
+            int colorH = program.getUniformAttribLocation("vColor");
+            GLErrorLogger.check();
+            GLES20.glUniform4fv(colorH, 1, material.diffuse, 0);
+            GLErrorLogger.check();
             GLES20.glDrawElements(GLES20.GL_TRIANGLES, points, GLES20.GL_UNSIGNED_SHORT, iv);
+            GLErrorLogger.check();
         }
 
         public enum Type {

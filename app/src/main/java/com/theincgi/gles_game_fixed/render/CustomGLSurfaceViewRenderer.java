@@ -40,7 +40,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
     public CustomGLSurfaceViewRenderer(Context context) {
         this.context = context;
-        camera = new Camera(0,0,-3, 0, 0, 15);
+        camera = new Camera(0,0,-5, 0, 0, 15);
         modelLoader = new ModelLoader2(context );
         MaterialManager.init(context);
     }
