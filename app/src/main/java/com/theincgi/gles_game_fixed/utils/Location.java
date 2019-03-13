@@ -106,16 +106,16 @@ public class Location {
         return matrix;
     }
 
-//    public void applyToStack(){
-//        float[] matrix = Utils.matrixStack.get();
-//        applyToMatrix(matrix);
-//    }
-//    public void applyToMatrix(float[] matrix){
-//        Matrix.translateM(matrix, 0, getX(),getY(),getZ());
-//        Matrix.rotateM(matrix, 0, getYaw(),   1, 0, 0);
-//        Matrix.rotateM(matrix, 0, getPitch(), 0, 1, 0);
-//        Matrix.rotateM(matrix, 0, getRoll(),  0, 0, 1);
-//    }
+    public void applyToStack(){
+        float[] matrix = Utils.matrixStack.get();
+        applyToMatrix(matrix);
+    }
+    public void applyToMatrix(float[] matrix){
+        Matrix.translateM(matrix, 0, getX(),getY(),getZ());
+        Matrix.rotateM(matrix, 0, getYaw(),   1, 0, 0);
+        Matrix.rotateM(matrix, 0, getPitch(), 0, 1, 0);
+        Matrix.rotateM(matrix, 0, getRoll(),  0, 0, 1);
+    }
 
     private float interpolate(float a, float b, float f){
         return a*(1-f) + b*f;

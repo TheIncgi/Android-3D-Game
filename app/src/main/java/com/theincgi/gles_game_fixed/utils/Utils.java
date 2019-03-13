@@ -1,7 +1,15 @@
 package com.theincgi.gles_game_fixed.utils;
 
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.opengl.GLES20;
+import android.opengl.GLUtils;
 import android.opengl.Matrix;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -38,7 +46,7 @@ public class Utils {
     public static int countChar(String s, char c){
         int out = 0;
         int cursor = 0;
-        while((cursor = (s.indexOf(c, cursor)+1)) != -1)
+        while((cursor = (s.indexOf(c, cursor+1))) != -1)
             out++;
         return out;
     }
@@ -56,6 +64,13 @@ public class Utils {
         for(int i = 0; i<a.size(); i++){
             out[i] = a.get(i)[pos];
         }
+        return out;
+    }
+
+    public static float[] unpackFloatList(ArrayList<Float> a){
+        float[] out = new float[a.size()];
+        for(int i = 0; i<a.size(); i++)
+            out[i] = a.get(i);
         return out;
     }
 
@@ -140,5 +155,26 @@ public class Utils {
         // set the buffer to read the first coordinate
         dataBuffer.position(0);
         return dataBuffer;
+    }
+
+    public static int loadTexture(Context context, int resID){
+        Bitmap img = BitmapFactory.decodeResource(context.getResources(), resID);
+        int[] texId = new int[1];
+        GLES20.glGenTextures(1, texId, 0);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texId[0]);
+        GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, img, 0);
+        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+        return texId[0];
+    }
+    public static int loadTexture(Context context, String assetName) throws IOException {
+        AssetManager m = context.getAssets();
+        InputStream in = m.open(assetName);
+        Bitmap img = BitmapFactory.decodeStream(in);
+        int[] texId = new int[1];
+        GLES20.glGenTextures(1, texId, 0);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texId[0]);
+        GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, img, 0);
+        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+        return texId[0];
     }
 }

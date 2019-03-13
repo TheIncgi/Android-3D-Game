@@ -9,6 +9,8 @@ import android.opengl.Matrix;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.theincgi.gles_game_fixed.geometry.MaterialManager;
+import com.theincgi.gles_game_fixed.geometry.ModelLoader2;
 import com.theincgi.gles_game_fixed.geometry.Square;
 import com.theincgi.gles_game_fixed.geometry.Triangle;
 import com.theincgi.gles_game_fixed.utils.Task;
@@ -31,7 +33,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
     private float near = .1f;
     private float far  = 10f;
     Camera camera;
-
+    private ModelLoader2 modelLoader;
 
     private Queue<Task> tasks = new LinkedList<>();
     private LinkedList<IRenderable> renderables = new LinkedList<>();
@@ -39,10 +41,13 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
     public CustomGLSurfaceViewRenderer(Context context) {
         this.context = context;
         camera = new Camera(0,0,-3, 0, 0, 15);
+        modelLoader = new ModelLoader2(context );
+        MaterialManager.init(context);
     }
 
     Triangle triangle;
     Square square;
+    ModelLoader2.Model cube;
     /*
      * Use this method to perform actions that need to happen only once, such as
      * setting OpenGL environment parameters or initializing OpenGL graphic objects.
@@ -56,6 +61,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
         Log.d("#GLES", "registering GLES programs");
         GLPrograms.setContext(context);
         GLPrograms.init();
+
         Log.d("#GLES", "programs have been registered");
 
         GLES20.glClearColor( 0.4f, 0.5f, 0.75f, 1.0f); //Sky blue
@@ -70,6 +76,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
         Matrix.translateM(projectionMatrix, 0, 0,0,0);
         triangle = new Triangle();
         square   = new Square();
+        cube = modelLoader.load("cube");
 //        // make adjustments for screen ratio
 //        float ratio = (float) width / height;
 //        gl.glMatrixMode(GL10.GL_PROJECTION);        // set matrix to projection mode
@@ -89,7 +96,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
         triangle.color.setFromHSV(time/10f%360, 1, 1, 1);
-        camera.location.setRoll(time/10f%360);
+        //camera.location.setRoll(time/10f%360);
 
         Matrix.multiplyMM(mvpm, 0,
                 projectionMatrix, 0,
@@ -102,6 +109,8 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
         }
         triangle.draw(mvpm);
         square.draw(mvpm);
+        cube.getLocation().rotate( System.currentTimeMillis()/1000, 0 ,0);
+        cube.draw(mvpm);
 
     }
 
