@@ -40,7 +40,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
     public CustomGLSurfaceViewRenderer(Context context) {
         this.context = context;
-        camera = new Camera(0,0,-10, 0, 0, 0);
+        camera = new Camera(0,10,-10, 0, -45, 0);
         modelLoader = new ModelLoader2(context );
         MaterialManager.init(context);
     }
@@ -79,6 +79,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
         square   = new Square();
         //cube = modelLoader.load("cube");
         model = modelLoader.load("triangle");
+        model.setProgram(GLPrograms.getDefault());
 //        // make adjustments for screen ratio
 //        float ratio = (float) width / height;
 //        gl.glMatrixMode(GL10.GL_PROJECTION);        // set matrix to projection mode

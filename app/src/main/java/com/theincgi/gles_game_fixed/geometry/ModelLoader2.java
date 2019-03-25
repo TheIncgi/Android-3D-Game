@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.StringJoiner;
 
 public class ModelLoader2 {
     private Context context;
@@ -148,6 +149,7 @@ public class ModelLoader2 {
                 }
             }
         }
+        Log.d("#ModelLoader", "VERT: "+vert.toString());
         ModelObject obj = new ModelObject();
         obj.groups = new MaterialGroup[tempGroups.keySet().size()];
         obj.vCoords = Utils.toBuffer(Utils.unpackFloatList(vert));
@@ -168,8 +170,9 @@ public class ModelLoader2 {
                 mg.in = Utils.toBuffer(Utils.unpackIntList(entry.getValue(), 1));
             }
             mg.material = entry.getKey();
-            mg.points = entry.getValue().size()/3;
+            mg.points = entry.getValue().size();
         }
+        Log.d("#Model", obj.toString());
         return obj;
     }
 
@@ -195,7 +198,7 @@ public class ModelLoader2 {
         }
 
         public void setProgram(GLProgram program) {
-            this.program = program;
+            Log.i("#Model","Program changed");this.program = program;
         }
 
         public void draw(float[] mvpm){
@@ -208,6 +211,19 @@ public class ModelLoader2 {
             GLErrorLogger.check();
             Utils.matrixStack.popMatrix();
         }
+
+
+        @Override
+        public String toString() {
+            StringBuilder out = new StringBuilder("Model: Objects = <");
+            for(int i = 0; i<modelObjects.length; i++) {
+                out.append(modelObjects[i].toString());
+                if(i!=modelObjects.length-1)
+                    out.append(", ");
+            }
+            out.append(">");
+            return out.toString();
+        }
         /*
         glVertexPointer(3, GL_FLOAT, 0, vertices);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, indices);*/
@@ -219,23 +235,55 @@ public class ModelLoader2 {
 
         boolean smoothShading = false;
 
+        private static final int COORDS_PER_VERTEX = 3;
+        public Color color = new Color(0.63671875f, 0.76953125f, 0.22265625f);
+
         public void draw(float[] mvpm, GLProgram program){
-            int posH   = program.getAttribLocation("vPosition"); //positionHandle
-
-            int mvpmH  = program.getUniformLocation("mvpm");
-
+            program = GLPrograms.getDefault();
+            program.use();
+            int posH = program.getAttribLocation("vPosition");
             GLES20.glEnableVertexAttribArray(posH);
-            GLES20.glVertexAttribPointer(posH, 3, GLES20.GL_FLOAT,
-                        false, 3*Float.SIZE, vCoords);
-            GLES20.glUniformMatrix4fv(mvpmH, 1, false, mvpm,0 );
-            GLErrorLogger.check();
-            for(MaterialGroup materialGroup : groups){
-
-                materialGroup.draw(program);
-            }
-
+            GLES20.glVertexAttribPointer(posH, COORDS_PER_VERTEX, GLES20.GL_FLOAT,
+                    false, COORDS_PER_VERTEX*Float.BYTES, vCoords);
+            int colorH = program.getUniformAttribLocation("vColor");
+            int mvpmH = program.getUniformLocation("mvpm");
+            GLES20.glUniform4fv(colorH, 1, color.array(), 0);
+            GLES20.glUniformMatrix4fv(mvpmH, 1, false, mvpm, 0);
+            GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 3);
             GLES20.glDisableVertexAttribArray(posH);
+//            int posH   = program.getAttribLocation("vPosition"); //positionHandle
+//
+//            int mvpmH  = program.getUniformLocation("mvpm");
+//
+//            GLES20.glEnableVertexAttribArray(posH);
+//            GLES20.glVertexAttribPointer(
+//                    posH,
+//                    COORDS_PER_VERTEX,
+//                    GLES20.GL_FLOAT,
+//                        false,
+//                    COORDS_PER_VERTEX*Float.BYTES,
+//                    vCoords);
+//            GLES20.glUniformMatrix4fv(mvpmH, 1, false, mvpm,0 );
+//            GLErrorLogger.check();
+//            for(MaterialGroup materialGroup : groups){
+//
+//                materialGroup.draw(program);
+//            }
+//
+//            GLES20.glDisableVertexAttribArray(posH);
             GLErrorLogger.check();
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder b = new StringBuilder(" Vertex: {");
+            for(int i = 0; i<vCoords.limit(); i++){
+                b.append(vCoords.get(i) );
+                if(i!=vCoords.limit()-1)
+                    b.append(", ");
+            }
+            b.append("}");
+            return b.toString();
         }
     }
 
@@ -246,13 +294,15 @@ public class ModelLoader2 {
         Type type;
         int points;
 
+        public Color color = new Color(0.63671875f, 0.76953125f, 0.22265625f);
         public void draw(GLProgram program){
             GLErrorLogger.check();
             int colorH = program.getUniformAttribLocation("vColor");
             GLErrorLogger.check();
-            GLES20.glUniform4fv(colorH, 1, material.diffuse, 0);
+            GLES20.glUniform4fv(colorH, 1, color.array(), 0); //material difuse
             GLErrorLogger.check();
-            GLES20.glDrawElements(GLES20.GL_TRIANGLES, points, GLES20.GL_UNSIGNED_SHORT, iv);
+            GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, points);
+           //GLES20.glDrawElements(GLES20.GL_TRIANGLES, points, GLES20.GL_UNSIGNED_SHORT, iv);
             GLErrorLogger.check();
         }
 
