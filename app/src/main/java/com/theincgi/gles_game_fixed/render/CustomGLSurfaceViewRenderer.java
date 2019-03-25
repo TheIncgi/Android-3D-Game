@@ -31,7 +31,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
     private final float[] mvpm = new float[16];
     private float fov = 100f;
     private float near = .1f;
-    private float far  = 10f;
+    private float far  = 100f;
     Camera camera;
     private ModelLoader2 modelLoader;
 
@@ -40,14 +40,15 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
     public CustomGLSurfaceViewRenderer(Context context) {
         this.context = context;
-        camera = new Camera(0,0,-5, 0, 0, 15);
+        camera = new Camera(0,0,-10, 0, 0, 0);
         modelLoader = new ModelLoader2(context );
         MaterialManager.init(context);
     }
 
     Triangle triangle;
     Square square;
-    ModelLoader2.Model cube;
+    //ModelLoader2.Model cube;
+    ModelLoader2.Model model;
     /*
      * Use this method to perform actions that need to happen only once, such as
      * setting OpenGL environment parameters or initializing OpenGL graphic objects.
@@ -76,7 +77,8 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
         Matrix.translateM(projectionMatrix, 0, 0,0,0);
         triangle = new Triangle();
         square   = new Square();
-        cube = modelLoader.load("cube");
+        //cube = modelLoader.load("cube");
+        model = modelLoader.load("triangle");
 //        // make adjustments for screen ratio
 //        float ratio = (float) width / height;
 //        gl.glMatrixMode(GL10.GL_PROJECTION);        // set matrix to projection mode
@@ -108,9 +110,9 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
             }
         }
         triangle.draw(mvpm);
-        square.draw(mvpm);
-        cube.getLocation().rotate( System.currentTimeMillis()/1000, 0 ,0);
-        cube.draw(mvpm);
+        //square.draw(mvpm);
+       // cube.getLocation().rotate( System.currentTimeMillis()/1000, 0 ,0);
+        model.draw(mvpm);
 
     }
 

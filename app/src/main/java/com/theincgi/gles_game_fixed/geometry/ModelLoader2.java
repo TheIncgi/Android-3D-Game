@@ -205,6 +205,7 @@ public class ModelLoader2 {
             for (ModelObject obj : modelObjects) {
                 obj.draw(mvpm, program);
             }
+            GLErrorLogger.check();
             Utils.matrixStack.popMatrix();
         }
         /*
@@ -234,6 +235,7 @@ public class ModelLoader2 {
             }
 
             GLES20.glDisableVertexAttribArray(posH);
+            GLErrorLogger.check();
         }
     }
 
