@@ -111,10 +111,13 @@ public class Location {
         applyToMatrix(matrix);
     }
     public void applyToMatrix(float[] matrix){
-        Matrix.translateM(matrix, 0, getX(),getY(),getZ());
-        Matrix.rotateM(matrix, 0, getYaw(),   1, 0, 0);
-        Matrix.rotateM(matrix, 0, getPitch(), 0, 1, 0);
+
         Matrix.rotateM(matrix, 0, getRoll(),  0, 0, 1);
+        Matrix.rotateM(matrix, 0, getPitch(), 0, 1, 0);
+        Matrix.rotateM(matrix, 0, getYaw(),   1, 0, 0);
+
+
+        Matrix.translateM(matrix, 0, getX(),getY(),getZ());
     }
 
     private float interpolate(float a, float b, float f){

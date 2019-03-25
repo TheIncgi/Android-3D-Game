@@ -239,38 +239,38 @@ public class ModelLoader2 {
         public Color color = new Color(0.63671875f, 0.76953125f, 0.22265625f);
 
         public void draw(float[] mvpm, GLProgram program){
-            program = GLPrograms.getDefault();
-            program.use();
-            int posH = program.getAttribLocation("vPosition");
-            GLES20.glEnableVertexAttribArray(posH);
-            GLES20.glVertexAttribPointer(posH, COORDS_PER_VERTEX, GLES20.GL_FLOAT,
-                    false, COORDS_PER_VERTEX*Float.BYTES, vCoords);
-            int colorH = program.getUniformAttribLocation("vColor");
-            int mvpmH = program.getUniformLocation("mvpm");
-            GLES20.glUniform4fv(colorH, 1, color.array(), 0);
-            GLES20.glUniformMatrix4fv(mvpmH, 1, false, mvpm, 0);
-            GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 3);
-            GLES20.glDisableVertexAttribArray(posH);
-//            int posH   = program.getAttribLocation("vPosition"); //positionHandle
-//
-//            int mvpmH  = program.getUniformLocation("mvpm");
-//
+//            program = GLPrograms.getDefault();
+//            program.use();
+//            int posH = program.getAttribLocation("vPosition");
 //            GLES20.glEnableVertexAttribArray(posH);
-//            GLES20.glVertexAttribPointer(
-//                    posH,
-//                    COORDS_PER_VERTEX,
-//                    GLES20.GL_FLOAT,
-//                        false,
-//                    COORDS_PER_VERTEX*Float.BYTES,
-//                    vCoords);
-//            GLES20.glUniformMatrix4fv(mvpmH, 1, false, mvpm,0 );
-//            GLErrorLogger.check();
-//            for(MaterialGroup materialGroup : groups){
-//
-//                materialGroup.draw(program);
-//            }
-//
+//            GLES20.glVertexAttribPointer(posH, COORDS_PER_VERTEX, GLES20.GL_FLOAT,
+//                    false, COORDS_PER_VERTEX*Float.BYTES, vCoords);
+//            int colorH = program.getUniformAttribLocation("vColor");
+//            int mvpmH = program.getUniformLocation("mvpm");
+//            GLES20.glUniform4fv(colorH, 1, color.array(), 0);
+//            GLES20.glUniformMatrix4fv(mvpmH, 1, false, mvpm, 0);
+//            GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 3);
 //            GLES20.glDisableVertexAttribArray(posH);
+            int posH   = program.getAttribLocation("vPosition"); //positionHandle
+
+            int mvpmH  = program.getUniformLocation("mvpm");
+
+            GLES20.glEnableVertexAttribArray(posH);
+            GLES20.glVertexAttribPointer(
+                    posH,
+                    COORDS_PER_VERTEX,
+                    GLES20.GL_FLOAT,
+                        false,
+                    COORDS_PER_VERTEX*Float.BYTES,
+                    vCoords);
+            GLES20.glUniformMatrix4fv(mvpmH, 1, false, mvpm,0 );
+            GLErrorLogger.check();
+            for(MaterialGroup materialGroup : groups){
+
+                materialGroup.draw(program);
+            }
+
+            GLES20.glDisableVertexAttribArray(posH);
             GLErrorLogger.check();
         }
 
@@ -299,10 +299,10 @@ public class ModelLoader2 {
             GLErrorLogger.check();
             int colorH = program.getUniformAttribLocation("vColor");
             GLErrorLogger.check();
-            GLES20.glUniform4fv(colorH, 1, color.array(), 0); //material difuse
+            GLES20.glUniform4fv(colorH, 1, material.diffuse, 0);
             GLErrorLogger.check();
-            GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, points);
-           //GLES20.glDrawElements(GLES20.GL_TRIANGLES, points, GLES20.GL_UNSIGNED_SHORT, iv);
+            //GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, points);
+            GLES20.glDrawElements(GLES20.GL_TRIANGLES, points, GLES20.GL_UNSIGNED_SHORT, iv);
             GLErrorLogger.check();
         }
 
