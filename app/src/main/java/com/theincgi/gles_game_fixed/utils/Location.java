@@ -98,10 +98,13 @@ public class Location {
 
     public float[] getMatrix(){
         Matrix.setIdentityM(matrix, 0);
-        Matrix.translateM(matrix, 0, getX(),getY(),getZ());
-        Matrix.rotateM(matrix, 0, getYaw(),   1, 0, 0);
-        Matrix.rotateM(matrix, 0, getPitch(), 0, 1, 0);
+
         Matrix.rotateM(matrix, 0, getRoll(),  0, 0, 1);
+        Matrix.rotateM(matrix, 0, getPitch(), 1, 0, 0);
+        Matrix.rotateM(matrix, 0, getYaw(),   0, 1, 0);
+
+
+        Matrix.translateM(matrix, 0, getX(),getY(),getZ());
 
         return matrix;
     }

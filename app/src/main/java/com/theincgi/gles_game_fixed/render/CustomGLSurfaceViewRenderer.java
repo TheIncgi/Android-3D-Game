@@ -40,7 +40,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
     public CustomGLSurfaceViewRenderer(Context context) {
         this.context = context;
-        camera = new Camera(0,10,-10, 0, -45, 0);
+        camera = new Camera(0,-3,-3, 0, 45, 0);
         modelLoader = new ModelLoader2(context );
         MaterialManager.init(context);
     }
@@ -78,7 +78,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
         triangle = new Triangle();
         square   = new Square();
         //cube = modelLoader.load("cube");
-        model = modelLoader.load("triangle");
+        model = modelLoader.load("point");
         model.setProgram(GLPrograms.getDefault());
 //        // make adjustments for screen ratio
 //        float ratio = (float) width / height;
@@ -100,6 +100,8 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
         triangle.color.setFromHSV(time/10f%360, 1, 1, 1);
         //camera.location.setRoll(time/10f%360);
+
+        
 
         Matrix.multiplyMM(mvpm, 0,
                 projectionMatrix, 0,

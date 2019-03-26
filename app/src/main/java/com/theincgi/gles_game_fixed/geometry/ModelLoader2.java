@@ -142,6 +142,9 @@ public class ModelLoader2 {
                             default:
                                 throw new RuntimeException("Too many points in face index");
                         }
+                        for (int j = 0; j < face.length; j++) {
+                            face[j]--;
+                        }
                         if (!tempGroups.containsKey(currentMaterial))
                             tempGroups.put(currentMaterial, new ArrayList<int[]>());
                         tempGroups.get(currentMaterial).add(face);
