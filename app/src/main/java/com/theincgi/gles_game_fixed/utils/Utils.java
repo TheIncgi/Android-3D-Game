@@ -34,6 +34,12 @@ public class Utils {
             min = Math.min(min, values[i]);
         return min;
     }
+    public static float distance(Location a, Location b){ return distance(a, b.getX(), b.getY(), b.getZ());}
+    public static float distance(Location l, float x, float y, float z){ return distance(l.getX(), l.getY(), l.getZ(), x, y, z); }
+    public static float distance( float a, float b, float c, float x, float y, float z ){
+        float dx = x-a, dy = y-b, dz = z-c;
+        return (float)Math.sqrt(dx*dx + dy*dy + dz*dz);
+    }
     public static float clamp(float x, float low, float high){
         return Math.max(low, Math.min(x, high));
     }

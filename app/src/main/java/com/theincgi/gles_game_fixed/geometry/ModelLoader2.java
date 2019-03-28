@@ -297,7 +297,7 @@ public class ModelLoader2 {
         Type type;
         int points;
 
-        public Color color = new Color(0.63671875f, 0.76953125f, 0.22265625f);
+        //public Color color = new Color(0.63671875f, 0.76953125f, 0.22265625f);
         public void draw(GLProgram program){
             GLErrorLogger.check();
             int colorH = program.getUniformAttribLocation("vColor");

@@ -101,7 +101,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
         triangle.color.setFromHSV(time/10f%360, 1, 1, 1);
         //camera.location.setRoll(time/10f%360);
 
-        
+
 
         Matrix.multiplyMM(mvpm, 0,
                 projectionMatrix, 0,
