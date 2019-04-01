@@ -66,7 +66,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
         Log.d("#GLES", "programs have been registered");
 
         GLES20.glClearColor( 0.4f, 0.5f, 0.75f, 1.0f); //Sky blue
-
+        GLES20.glEnable(GLES20.GL_DEPTH_TEST);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
         triangle = new Triangle();
         square   = new Square();
         //cube = modelLoader.load("cube");
-        model = modelLoader.load("point");
+        model = modelLoader.load("colorcube");
         model.setProgram(GLPrograms.getDefault());
 //        // make adjustments for screen ratio
 //        float ratio = (float) width / height;
@@ -97,6 +97,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
         }
 
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+        GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT);
 
         triangle.color.setFromHSV(time/10f%360, 1, 1, 1);
         //camera.location.setRoll(time/10f%360);

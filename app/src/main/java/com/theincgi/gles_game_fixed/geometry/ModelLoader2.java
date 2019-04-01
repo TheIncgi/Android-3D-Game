@@ -143,7 +143,7 @@ public class ModelLoader2 {
                                 throw new RuntimeException("Too many points in face index");
                         }
                         for (int j = 0; j < face.length; j++) {
-                            face[j]--;
+                            face[j]--; //adjust so starts at zero
                         }
                         if (!tempGroups.containsKey(currentMaterial))
                             tempGroups.put(currentMaterial, new ArrayList<int[]>());
@@ -158,6 +158,8 @@ public class ModelLoader2 {
         obj.vCoords = Utils.toBuffer(Utils.unpackFloatList(vert));
         obj.nCoords = Utils.toBuffer(Utils.unpackFloatList(norm));
         obj.tCoords = Utils.toBuffer(Utils.unpackFloatList( uv ));
+
+
 
         int groupNum = 0;
         for (Map.Entry<MaterialManager.Material, ArrayList<int[]>> entry: tempGroups.entrySet() ) {
@@ -304,8 +306,10 @@ public class ModelLoader2 {
             GLErrorLogger.check();
             GLES20.glUniform4fv(colorH, 1, material.diffuse, 0);
             GLErrorLogger.check();
+
             //GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, points);
-            GLES20.glDrawElements(GLES20.GL_TRIANGLES, points, GLES20.GL_UNSIGNED_SHORT, iv);
+            GLES20.glDrawElements(GLES20.GL_TRIANGLES, iv.limit(), GLES20.GL_UNSIGNED_SHORT, iv);
+
             GLErrorLogger.check();
         }
 
