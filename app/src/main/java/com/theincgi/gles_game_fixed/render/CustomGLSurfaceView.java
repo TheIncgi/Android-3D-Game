@@ -18,8 +18,16 @@ import javax.microedition.khronos.opengles.GL;
 public class CustomGLSurfaceView extends GLSurfaceView {
     CustomGLSurfaceViewRenderer renderer;
 
-    public CustomGLSurfaceView(Context context, CustomGLSurfaceViewRenderer renderer) {
+    public CustomGLSurfaceView(Context context, AttributeSet attrs) {
+        this(context);
+
+    }
+
+    public CustomGLSurfaceView(Context context) {
         super(context);
+
+    }
+    public void init(CustomGLSurfaceViewRenderer renderer){
         this.renderer = renderer;
         Log.d("#GLES", "CustomGLSurfaceView: Creating context ("+Thread.currentThread().getId()+")");
         setEGLContextClientVersion(2); //Creates OpenGL ES 2.0 context

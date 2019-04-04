@@ -22,21 +22,27 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        boolean useXML = false;
+        if( useXML ) {
+
+            glSurfaceView = findViewById(R.id.customGLSurfaceView);
+            if (glSurfaceView == null)
+                throw new NullPointerException("could not load gl surface view!");
+            glSurfaceView.init(glSurfaceViewRenderer = new CustomGLSurfaceViewRenderer(this));
 
 
-//        setContentView(R.layout.activity_main);
-//
-//        constraintLayout = findViewById(R.id.constraintLayout);
-        Log.d("#GLES", "Main: setting context ("+Thread.currentThread().getId()+")");
+            glSurfaceView.setRenderer(glSurfaceViewRenderer);
+            glSurfaceView.setDrawWhenDirty(false);
 
 
-        glSurfaceView = new CustomGLSurfaceView(this, glSurfaceViewRenderer = new CustomGLSurfaceViewRenderer(this));
-
-        //glSurfaceView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        glSurfaceView.setRenderer(glSurfaceViewRenderer);
-        glSurfaceView.setDrawWhenDirty( false );
-        setContentView(glSurfaceView);
-
-
+        }else {
+            glSurfaceView = new CustomGLSurfaceView(this);
+            glSurfaceView.init( glSurfaceViewRenderer = new CustomGLSurfaceViewRenderer(this));
+            glSurfaceView.setRenderer(glSurfaceViewRenderer);
+            glSurfaceView.setDrawWhenDirty(false);
+            setContentView(glSurfaceView);
+        }
     }
 }
