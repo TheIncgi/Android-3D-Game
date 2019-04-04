@@ -13,6 +13,7 @@ import com.theincgi.gles_game_fixed.geometry.MaterialManager;
 import com.theincgi.gles_game_fixed.geometry.ModelLoader2;
 import com.theincgi.gles_game_fixed.geometry.Square;
 import com.theincgi.gles_game_fixed.geometry.Triangle;
+import com.theincgi.gles_game_fixed.utils.Location;
 import com.theincgi.gles_game_fixed.utils.Task;
 
 import java.util.LinkedList;
@@ -33,7 +34,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
     private float near = .1f;
     private float far  = 100f;
     Camera camera;
-    private ModelLoader2 modelLoader;
+    Location origin = new Location();
 
     private Queue<Task> tasks = new LinkedList<>();
     private LinkedList<IRenderable> renderables = new LinkedList<>();
@@ -41,7 +42,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
     public CustomGLSurfaceViewRenderer(Context context) {
         this.context = context;
         camera = new Camera(0,-3,-3, 0, 45, 0);
-        modelLoader = new ModelLoader2(context );
+        ModelLoader2.init(context);
         MaterialManager.init(context);
     }
 
@@ -78,8 +79,8 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
         triangle = new Triangle();
         square   = new Square();
         //cube = modelLoader.load("cube");
-        model = modelLoader.load("colorcube");
-        model.setProgram(GLPrograms.getDefault());
+        model = ModelLoader2.get("pointer");
+        //model.setProgram(GLPrograms.getDefault());
 //        // make adjustments for screen ratio
 //        float ratio = (float) width / height;
 //        gl.glMatrixMode(GL10.GL_PROJECTION);        // set matrix to projection mode
@@ -116,7 +117,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
         triangle.draw(mvpm);
         //square.draw(mvpm);
        // cube.getLocation().rotate( System.currentTimeMillis()/1000, 0 ,0);
-        model.draw(mvpm);
+        model.draw(mvpm, origin);
 
     }
 

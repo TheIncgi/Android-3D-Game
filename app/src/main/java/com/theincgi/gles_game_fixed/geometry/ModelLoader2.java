@@ -21,10 +21,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.StringJoiner;
+import java.util.WeakHashMap;
 
 public class ModelLoader2 {
     private Context context;
-    public ModelLoader2(Context context) {
+
+    private static ModelLoader2 instance;
+
+
+    public static void init(Context context){
+        instance = new ModelLoader2(context);
+    }
+
+    WeakHashMap<String, Model> loadedModels = new WeakHashMap<>();
+    private ModelLoader2(Context context) {
         this.context = context;
     }
     private static final String
@@ -37,7 +47,18 @@ public class ModelLoader2 {
             SMOOTH_SHADING = "s",
             ADD_FACE     = "f",
             COMMENT      = "#";
-    public Model load(String objName){
+
+    public static Model get(String modelName){
+        return instance._get(modelName);
+    }
+    private Model _get(String model){
+        if(!loadedModels.containsKey(model)){
+            loadedModels.put(model, load(model));
+        }
+        return loadedModels.get(model);
+    }
+
+    private Model load(String objName){
         try {
             AssetManager m = context.getAssets();
             Scanner scanner = new Scanner(m.open(objName + ".obj"));
@@ -184,18 +205,12 @@ public class ModelLoader2 {
 
     public static class Model {
         MaterialManager.MaterialLib materialLib;
-        Location location;
         ModelObject[] modelObjects;
         GLProgram program = GLPrograms.getDefault();
 
         public Model(MaterialManager.MaterialLib materialLib, ModelObject... modelObjects) {
             this.materialLib = materialLib;
             this.modelObjects = modelObjects;
-            location = new Location();
-        }
-
-        public Location getLocation() {
-            return location;
         }
 
         public GLProgram getProgram() {
@@ -206,9 +221,9 @@ public class ModelLoader2 {
             Log.i("#Model","Program changed");this.program = program;
         }
 
-        public void draw(float[] mvpm){
+        public void draw(float[] mvpm, Location at){
             Utils.matrixStack.pushMatrix();
-            location.applyToStack();
+            at.applyToStack();
             program.use();
             for (ModelObject obj : modelObjects) {
                 obj.draw(mvpm, program);
@@ -308,7 +323,7 @@ public class ModelLoader2 {
             GLErrorLogger.check();
 
             //GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, points);
-            GLES20.glDrawElements(GLES20.GL_TRIANGLES, iv.limit(), GLES20.GL_UNSIGNED_SHORT, iv);
+            GLES20.glDrawElements(GLES20.GL_TRIANGLES, iv.limit(), GLES20.GL_UNSIGNED_INT, iv);
 
             GLErrorLogger.check();
         }
@@ -319,5 +334,9 @@ public class ModelLoader2 {
             VERTEX_AND_NORMAL,
             ALL;
         }
+    }
+
+    public interface DrawableModel {
+        public void draw(float[] mvpm);
     }
 }
