@@ -53,7 +53,10 @@ public class ModelLoader2 {
     }
     private Model _get(String model){
         if(!loadedModels.containsKey(model)){
+            long start = System.currentTimeMillis();
             loadedModels.put(model, load(model));
+            long end = System.currentTimeMillis();
+            Log.d("TIME_MEASURE", String.format("took %d millis to load model '%s'", (end-start), model));
         }
         return loadedModels.get(model);
     }
@@ -261,7 +264,11 @@ public class ModelLoader2 {
         public void draw(float[] mvpm, float[] model, GLProgram program){
             int posH   = program.getAttribLocation("vPosition"); //positionHandle
 
-            int mvpmH  = program.getUniformLocation("mvpm");
+            int projectionH  = program.getUniformLocation("projectionMatrix");
+            int modelH       = program.getUniformLocation("modelMatrix");
+
+            if(projectionH == 0)throw new RuntimeException("No projection handle");
+            //if(modelH == 0)throw new RuntimeException("No Model handle!");
 
             GLES20.glEnableVertexAttribArray(posH);
             GLES20.glVertexAttribPointer(
@@ -271,7 +278,11 @@ public class ModelLoader2 {
                         false,
                     COORDS_PER_VERTEX*Float.BYTES,
                     vCoords);
-            GLES20.glUniformMatrix4fv(mvpmH, 1, false, mvpm,0 );
+
+            GLErrorLogger.check();
+            GLES20.glUniformMatrix4fv(projectionH, 1, false, mvpm,0 );
+            GLErrorLogger.check();
+            GLES20.glUniformMatrix4fv(modelH, 1, false, model,0 );
             GLErrorLogger.check();
             for(MaterialGroup materialGroup : groups){
 
@@ -305,7 +316,7 @@ public class ModelLoader2 {
         //public Color color = new Color(0.63671875f, 0.76953125f, 0.22265625f);
         public void draw(GLProgram program){
             GLErrorLogger.check();
-            int colorH = program.getUniformAttribLocation("vColor");
+            int colorH = program.getUniformLocation("vColor");
             GLErrorLogger.check();
             GLES20.glUniform4fv(colorH, 1, material.diffuse, 0);
             GLErrorLogger.check();

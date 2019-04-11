@@ -44,7 +44,7 @@ public class Triangle implements IRenderable {
                 false,
                 vertexStride,
                 vertexBuffer);
-        int colorH = prgm.getUniformAttribLocation("vColor");
+        int colorH = prgm.getUniformLocation("vColor");
         int mvpmH  = prgm.getUniformLocation("mvpm");
         GLES20.glUniform4fv(colorH, 1, color.array(), 0);
         GLES20.glUniformMatrix4fv(mvpmH, 1, false, mvpm, 0);

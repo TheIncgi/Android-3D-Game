@@ -19,6 +19,7 @@ public class GLProgram{
     private int program;
 
     public GLProgram(Context context, int vertex_id, int fragment_id) {
+        Log.i("Shaders", "Building shader...");
         int vShader = loadShader( context, GL_VERTEX_SHADER, vertex_id);
         int fShader = loadShader( context, GL_FRAGMENT_SHADER, fragment_id );
         GLErrorLogger.check();
@@ -41,15 +42,15 @@ public class GLProgram{
         GLES20.glDeleteShader(vShader);
         GLES20.glDeleteShader(fShader);
         GLErrorLogger.check();
-
+        Log.i("Shader", "Finished building shader");
     }
 
     public int getAttribLocation(String name){
         return GLES20.glGetAttribLocation(program, name);
     }
-    public int getUniformAttribLocation(String name){
-        return GLES20.glGetUniformLocation(program, name);
-    }
+//    public int getUniformAttribLocation(String name){
+//        return GLES20.glGetAttribLocation(program, name);
+//    }
     public int getUniformLocation(String name){
         return GLES20.glGetUniformLocation(program, name);
     }
