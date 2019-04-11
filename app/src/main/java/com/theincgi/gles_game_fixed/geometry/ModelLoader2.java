@@ -226,7 +226,7 @@ public class ModelLoader2 {
             at.applyToStack();
             program.use();
             for (ModelObject obj : modelObjects) {
-                obj.draw(mvpm, program);
+                obj.draw(mvpm, Utils.matrixStack.get(), program);
             }
             GLErrorLogger.check();
             Utils.matrixStack.popMatrix();
@@ -258,19 +258,7 @@ public class ModelLoader2 {
         private static final int COORDS_PER_VERTEX = 3;
         public Color color = new Color(0.63671875f, 0.76953125f, 0.22265625f);
 
-        public void draw(float[] mvpm, GLProgram program){
-//            program = GLPrograms.getDefault();
-//            program.use();
-//            int posH = program.getAttribLocation("vPosition");
-//            GLES20.glEnableVertexAttribArray(posH);
-//            GLES20.glVertexAttribPointer(posH, COORDS_PER_VERTEX, GLES20.GL_FLOAT,
-//                    false, COORDS_PER_VERTEX*Float.BYTES, vCoords);
-//            int colorH = program.getUniformAttribLocation("vColor");
-//            int mvpmH = program.getUniformLocation("mvpm");
-//            GLES20.glUniform4fv(colorH, 1, color.array(), 0);
-//            GLES20.glUniformMatrix4fv(mvpmH, 1, false, mvpm, 0);
-//            GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 3);
-//            GLES20.glDisableVertexAttribArray(posH);
+        public void draw(float[] mvpm, float[] model, GLProgram program){
             int posH   = program.getAttribLocation("vPosition"); //positionHandle
 
             int mvpmH  = program.getUniformLocation("mvpm");

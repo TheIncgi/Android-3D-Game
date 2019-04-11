@@ -8,6 +8,7 @@ public class Entity implements ModelLoader2.DrawableModel {
     Location location;
     ModelLoader2.Model model;
     AABB aabb;
+
     float baseMovementSpeed;
 
     public Entity(String modelName) {
@@ -22,6 +23,10 @@ public class Entity implements ModelLoader2.DrawableModel {
     public Location getLocation() {
         return location;
     }
+
+    public void onTick( long time ){}
+
+
 
     @Override
     public void draw(float[] mvpm) {

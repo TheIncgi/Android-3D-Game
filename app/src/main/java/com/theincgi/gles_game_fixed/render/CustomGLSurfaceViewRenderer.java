@@ -9,6 +9,8 @@ import android.opengl.Matrix;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.theincgi.gles_game_fixed.game.Engine;
+import com.theincgi.gles_game_fixed.game.entities.Ball;
 import com.theincgi.gles_game_fixed.geometry.MaterialManager;
 import com.theincgi.gles_game_fixed.geometry.ModelLoader2;
 import com.theincgi.gles_game_fixed.geometry.Square;
@@ -44,10 +46,11 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
         camera = new Camera(0,-3,-3, 0, 45, 0);
         ModelLoader2.init(context);
         MaterialManager.init(context);
+
     }
 
-    Triangle triangle;
-    Square square;
+    //Triangle triangle;
+    //Square square;
     //ModelLoader2.Model cube;
     ModelLoader2.Model model;
     /*
@@ -68,6 +71,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
         GLES20.glClearColor( 0.4f, 0.5f, 0.75f, 1.0f); //Sky blue
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+        Engine.instance().start();
     }
 
     @Override
@@ -76,10 +80,11 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
         float aspect = width/(float)height;
         Matrix.perspectiveM(projectionMatrix, 0, fov, aspect, near, far);
         Matrix.translateM(projectionMatrix, 0, 0,0,0);
-        triangle = new Triangle();
-        square   = new Square();
+        //triangle = new Triangle();
+        //square   = new Square();
         //cube = modelLoader.load("cube");
-        model = ModelLoader2.get("pointer");
+        //model = ModelLoader2.get("pointer");
+        Engine.instance().addEntity( new Ball() );
         //model.setProgram(GLPrograms.getDefault());
 //        // make adjustments for screen ratio
 //        float ratio = (float) width / height;
@@ -100,7 +105,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
         GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT);
 
-        triangle.color.setFromHSV(time/10f%360, 1, 1, 1);
+        //triangle.color.setFromHSV(time/10f%360, 1, 1, 1);
         //camera.location.setRoll(time/10f%360);
 
 
@@ -109,15 +114,11 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
                 projectionMatrix, 0,
                 camera.getMatrix(), 0);
 
-        synchronized (renderables){
-            for (IRenderable renderable : renderables) {
-                renderable.draw(mvpm);
-            }
-        }
-        triangle.draw(mvpm);
+        Engine.instance().drawAll( mvpm );
+        //triangle.draw(mvpm);
         //square.draw(mvpm);
        // cube.getLocation().rotate( System.currentTimeMillis()/1000, 0 ,0);
-        model.draw(mvpm, origin);
+        //model.draw(mvpm, origin);
 
     }
 

@@ -8,11 +8,12 @@
     tools:context=".MainActivity" >
 
     <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <com.theincgi.gles_game_fixed.render.CustomGLSurfaceView
-            android:id="@+id/customGLSurfaceView"
+            android:id="@+id/theGLSurfaceView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </FrameLayout>
