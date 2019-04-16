@@ -4,7 +4,7 @@ import com.theincgi.gles_game_fixed.game.entity.Entity;
 
 public class Ball extends Entity {
     public Ball() {
-        super( "colorcube" );
+        super( "sphere" );
     }
 
     @Override
