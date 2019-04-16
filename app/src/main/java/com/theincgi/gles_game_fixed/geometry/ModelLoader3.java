@@ -35,8 +35,8 @@ public class ModelLoader3 {
     private void load(String objName) throws IOException {
         AssetManager m = context.getAssets();
         InputStream in =m.open( objName + ".mdl" );
-        MaterialManager.MaterialLib materialLib;
-        ModelObject currentObject;
+        Model model = new Model();
+        model.modelName = objName;
 
 
         /*
@@ -110,6 +110,7 @@ public class ModelLoader3 {
 
     public static class Model {
         ArrayList<ModelObject> objects;
+        String modelName;
         GLProgram program = GLPrograms.getDefault();
         public void drawAll(float[] mvpm, Location at){
             program.use();
@@ -131,7 +132,7 @@ public class ModelLoader3 {
     }
 
     private static class ModelObject {
-        MaterialGroup[] materials;
+        ArrayList<MaterialGroup> materials;
         String name;
         boolean smoothShading = false;
 
@@ -173,7 +174,9 @@ public class ModelLoader3 {
         int points;
 
 
-        public void draw(GLProgram program ){}
+        public void draw(GLProgram program ){
+
+        }
 
     }
 }
