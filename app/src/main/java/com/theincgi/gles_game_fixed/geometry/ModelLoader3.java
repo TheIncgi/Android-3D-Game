@@ -2,7 +2,9 @@ package com.theincgi.gles_game_fixed.geometry;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.nfc.FormatException;
 import android.opengl.GLES20;
+import android.util.Log;
 
 import com.theincgi.gles_game_fixed.render.GLProgram;
 import com.theincgi.gles_game_fixed.render.GLPrograms;
@@ -31,50 +33,99 @@ public class ModelLoader3 {
         return instance==null? instance=new ModelLoader3():instance;
     }
 
+    public static Model get(String name){
+        ModelLoader3 inst = instance();
+        if(!inst.loadedModels.containsKey( name ))
+            try {
+                inst.load(name);
+            }catch(IOException e){
+                throw new RuntimeException( e );
+            }
+        return inst.loadedModels.get( name );
+    }
+
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     private void load(String objName) throws IOException {
+        long start = System.currentTimeMillis();
         AssetManager m = context.getAssets();
         InputStream in =m.open( objName + ".mdl" );
         Model model = new Model();
         model.modelName = objName;
+        FloatBuffer vCoords, tCoords, nCoords;
 
-
+        ModelObject currentObject = null;
+        MaterialGroup currentMaterialGroup = null;
+        Integer vertCount = null;
         /*
-        MATERIAL_LIB,
-		VERTEX,
-		OBJ_DEF,
-		NORMAL,
-		FACE,
-		USE_MAT,
-		SMOOTH_SHADING,
-		UV_COORD;
+         MATERIAL_LIB,
+		 VERTEX,
+		 OBJ_DEF,
+		 NORMAL,
+		 FACE,
+		 USE_MAT,
+		 SMOOTH_SHADING,
+		 UV_COORD;
         * */
         while( in.available() > 0 ){
             String chunk = readUtf( in );
             switch (chunk){
                 case "MATERIAL_LIB":{
-                    materialLib = MaterialManager.get(readUtf(in));
+                    model.materialLib = MaterialManager.get(readUtf(in));
                     break;
                 }
                 case "OBJ_DEF":{
-                    currentObject = new ModelObject();
+                    model.objects.add( currentObject = new ModelObject() );
                     currentObject.name = readUtf( in );
-
                     break;
                 }
                 case "VERTEX":{
-
+                    vertCount = readInt( in );
+                    model.vCoords = Utils.toBuffer( readFloatArray(in, vertCount*3) ); //TODO check me
                     break;
                 }
                 case "NORMAL":{
-
+                    vertCount = readInt( in );//if(vertCount==null) throw new RuntimeException("File format is invalid, vertex count expected before normals");
+                    model.nCoords = Utils.toBuffer( readFloatArray(in, vertCount*3) );
                     break;
                 }
                 case "UV_COORD":{
-
+                    vertCount = readInt( in );//if(vertCount==null) throw new RuntimeException("File format is invalid, vertex count expected before normals");
+                    model.tCoords = Utils.toBuffer( readFloatArray(in, vertCount*2) );
+                    break;
                 }
+                case "USE_MAT":{
+                    if(currentObject==null){
+                        Log.w("#ModelLoader","Material set before object, assuming animated model");
+                        model.objects.add( currentObject = new ModelObject() );
+                        currentObject.name = "Frame 0?";
+                    }
+                    currentObject.materials.add( currentMaterialGroup = new MaterialGroup() );
+                    currentMaterialGroup.material = model.materialLib.get( readUtf(in) );
+                    break;
+                }
+                case "FACE":{
+                    int numFaces = readInt( in );
+                    int[] vertIndex = readIntArray( in ,numFaces*3 ); //3 verts per face
+                    int[] txtrIndex = readIntArray( in, numFaces*3 ); //triangles
+                    int[] normalIndx= readIntArray( in, numFaces*3 ); //trinagles everywhere!
+                    currentMaterialGroup.iv = Utils.toBuffer( vertIndex );
+                    if(txtrIndex[0]!=-1)
+                        currentMaterialGroup.it = Utils.toBuffer( txtrIndex );
+                    if(normalIndx[0]!=-1)
+                        currentMaterialGroup.in = Utils.toBuffer( normalIndx );
+                    break;
+                }
+                case "SMOOTH_SHADING":{
+                    currentMaterialGroup.smoothShading = in.read()!=0;
+                    break;
+                }
+                default:
+                    throw new RuntimeException("Missing case: " + chunk);
             }
         }
+        loadedModels.put(objName, model);
+        long end = System.currentTimeMillis();
+        Log.i("#ModelLoader", String.format("Took %6.3f seconds to load '%s'", (end-start)/1000f, objName));
     }
 
     private int readShort(InputStream in) throws IOException{
@@ -95,12 +146,24 @@ public class ModelLoader3 {
                 in.read() << 8  |
                 in.read();
     }
-    private double readFloat(InputStream in) throws IOException{
+    private float readFloat(InputStream in) throws IOException{
         int bits = readInt( in );
         return Float.intBitsToFloat(bits);
     }
-
-
+    private float[] readFloatArray( InputStream in, int size ) throws IOException{
+        float[] floats = new float[ size ];
+        for (int i = 0; i < floats.length; i++) {
+            floats[i] = readFloat( in );
+        }
+        return floats;
+    }
+    private int[] readIntArray( InputStream in, int size ) throws IOException {
+        int[] ints = new int[ size ];
+        for (int i = 0; i < ints.length; i++) {
+            ints[i] = readInt( in );
+        }
+        return ints;
+    }
 
 
 
@@ -109,20 +172,66 @@ public class ModelLoader3 {
     //data containers
 
     public static class Model {
-        ArrayList<ModelObject> objects;
+        ArrayList<ModelObject> objects = new ArrayList<>();
         String modelName;
         GLProgram program = GLPrograms.getDefault();
-        public void drawAll(float[] mvpm, Location at){
-            program.use();
-            for (int i = 0; i < objects.size(); i++) {
-                drawObj(mvpm, at, i);
-                GLErrorLogger.check();
+        MaterialManager.MaterialLib materialLib;
+        FloatBuffer vCoords, tCoords, nCoords;
 
+        public void drawAll(float[] mvpm, Location at){
+            setup(mvpm, at);
+            for (int i = 0; i < objects.size(); i++) {
+                _drawObj(mvpm, i);
+                GLErrorLogger.check();
             }
+            cleanup();
         }
         public void drawObj(float[] mvpm, Location at, int objNum){
+            setup(mvpm, at);
+            _drawObj(mvpm, objNum);
+            cleanup();
+        }
+
+        private void setup(float[] mvpm, Location at){
+            program.use();
             Utils.matrixStack.pushMatrix();
-            objects.get(objNum).draw(mvpm, at, program);
+            at.applyToStack();
+
+            float[] modelMatrix = at.getMatrix();
+
+            int posH = program.getAttribLocation("vPosition");
+            int projectionH  = program.getUniformLocation("projectionMatrix");
+            int modelH       = program.getUniformLocation("modelMatrix");
+
+
+            GLES20.glEnableVertexAttribArray(posH);
+            GLES20.glVertexAttribPointer( posH,
+                    3,//COORDS_PER_VERTEX,
+                    GLES20.GL_FLOAT, false,
+                    3*Float.BYTES,//COORDS_PER_VERTEX*Float.BYTES,
+                    vCoords);
+            GLErrorLogger.check();
+
+            GLES20.glUniformMatrix4fv(projectionH, 1, false, mvpm,0 );
+            GLErrorLogger.check();
+
+            GLES20.glUniformMatrix4fv(modelH, 1, false, modelMatrix, 0);
+            GLErrorLogger.check();
+        }
+
+        private void cleanup(){
+            int posH = program.getAttribLocation("vPosition");
+            int projectionH  = program.getUniformLocation("projectionMatrix");
+            int modelH       = program.getUniformLocation("modelMatrix");
+            GLES20.glDisableVertexAttribArray(posH);
+
+            GLErrorLogger.check();
+            Utils.matrixStack.popMatrix();
+        }
+
+        private void _drawObj(float[] mvpm, int objNum){
+            Utils.matrixStack.pushMatrix();
+            objects.get(objNum).draw(mvpm, program);
             GLErrorLogger.check();
             Utils.matrixStack.popMatrix();
         }
@@ -132,38 +241,18 @@ public class ModelLoader3 {
     }
 
     private static class ModelObject {
-        ArrayList<MaterialGroup> materials;
+        ArrayList<MaterialGroup> materials = new ArrayList<>();
         String name;
-        boolean smoothShading = false;
 
-        FloatBuffer vCoords, tCoords, nCoords;
-        public void draw(float[] mvpm, Location at, GLProgram program){
-            at.applyToStack();
-            int posH = program.getAttribLocation("vPosition");
-            int projectionH  = program.getUniformLocation("projectionMatrix");
-            int modelH       = program.getUniformLocation("modelMatrix");
+        public void draw(float[] mvpm, GLProgram program){
 
-
-            GLES20.glEnableVertexAttribArray(posH);
-            GLES20.glVertexAttribPointer(
-                    posH,
-                    3,//COORDS_PER_VERTEX,
-                    GLES20.GL_FLOAT,
-                    false,
-                    3*Float.BYTES,//COORDS_PER_VERTEX*Float.BYTES,
-                    vCoords);
-
-            GLErrorLogger.check();
-            GLES20.glUniformMatrix4fv(projectionH, 1, false, mvpm,0 );
-            GLErrorLogger.check();
-            GLES20.glUniformMatrix4fv(modelH, 1, false, model,0 );
+            //GLES20.glUniformMatrix4fv(modelH, 1, false, model,0 );
             GLErrorLogger.check();
             for(MaterialGroup materialGroup : materials){
                 materialGroup.draw(program);
             }
 
-            GLES20.glDisableVertexAttribArray(posH);
-            GLErrorLogger.check();
+
 
         }
     }
@@ -171,10 +260,15 @@ public class ModelLoader3 {
     private static class MaterialGroup {
         MaterialManager.Material material;
         IntBuffer iv, it, in;
-        int points;
+        boolean smoothShading = false;
 
 
         public void draw(GLProgram program ){
+            int diffuseH = program.getUniformLocation("diffuse");
+            GLES20.glUniform4fv(diffuseH, 1, material.diffuse, 0);
+            GLErrorLogger.check();
+
+            GLES20.glDrawElements(GLES20.GL_TRIANGLES, iv.limit(), GLES20.GL_UNSIGNED_INT, iv);
 
         }
 

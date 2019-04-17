@@ -47,7 +47,7 @@ public class MaterialManager {
         try{
             //TODO load material!
             AssetManager m = context.getAssets();
-            Scanner s = new Scanner(m.open(name+".mtl"));
+            Scanner s = new Scanner(m.open(name));
             MaterialLib lib = new MaterialLib();
             Material current = null;
             while(s.hasNext()){

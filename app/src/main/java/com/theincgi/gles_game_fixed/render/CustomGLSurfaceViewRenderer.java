@@ -13,6 +13,7 @@ import com.theincgi.gles_game_fixed.game.Engine;
 import com.theincgi.gles_game_fixed.game.entities.Ball;
 import com.theincgi.gles_game_fixed.geometry.MaterialManager;
 import com.theincgi.gles_game_fixed.geometry.ModelLoader2;
+import com.theincgi.gles_game_fixed.geometry.ModelLoader3;
 import com.theincgi.gles_game_fixed.geometry.Square;
 import com.theincgi.gles_game_fixed.geometry.Triangle;
 import com.theincgi.gles_game_fixed.utils.Location;
@@ -45,6 +46,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
         this.context = context;
         camera = new Camera(0,-3,-3, 0, 45, 0);
         ModelLoader2.init(context);
+        ModelLoader3.init(context);
         MaterialManager.init(context);
 
     }
