@@ -1,6 +1,7 @@
 package com.theincgi.gles_game_fixed.game;
 
 import com.theincgi.gles_game_fixed.game.entity.Entity;
+import com.theincgi.gles_game_fixed.render.Camera;
 import com.theincgi.gles_game_fixed.utils.Location;
 
 import java.util.Iterator;
@@ -79,10 +80,10 @@ public class Engine {
         return entities;
     }
 
-    public void drawAll(float[] mvpm){
+    public void drawAll(float[] mvpm, Camera camera){
         synchronized (entities){
             for(Entity e : entities){
-                e.draw(mvpm);
+                e.draw(mvpm, camera);
             }
         }
     }

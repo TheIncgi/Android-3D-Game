@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.StringJoiner;
 import java.util.WeakHashMap;
-
+@Deprecated
 public class ModelLoader2 {
     private Context context;
 
@@ -48,6 +48,7 @@ public class ModelLoader2 {
             ADD_FACE     = "f",
             COMMENT      = "#";
 
+    @Deprecated
     public static Model get(String modelName){
         return instance._get(modelName);
     }
@@ -105,6 +106,7 @@ public class ModelLoader2 {
             return null;
         }
     }
+    @Deprecated
     private ModelObject parseModelObject(Scanner scanner, MaterialManager.MaterialLib lib){
         ArrayList<Float> vert = new ArrayList<>();
         ArrayList<Float> uv   = new ArrayList<>();
@@ -205,7 +207,7 @@ public class ModelLoader2 {
         return obj;
     }
 
-
+    @Deprecated
     public static class Model {
         MaterialManager.MaterialLib materialLib;
         ModelObject[] modelObjects;
@@ -251,6 +253,7 @@ public class ModelLoader2 {
         glVertexPointer(3, GL_FLOAT, 0, vertices);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, indices);*/
     }
+    @Deprecated
     public static class ModelObject {
         String name;
         FloatBuffer vCoords, tCoords, nCoords;
@@ -306,7 +309,9 @@ public class ModelLoader2 {
         }
     }
 
+
     /**Collection of faces using the same material*/
+    @Deprecated
     public static class MaterialGroup {
         MaterialManager.Material material;
         IntBuffer   iv, it, in;
@@ -314,6 +319,7 @@ public class ModelLoader2 {
         int points;
 
         //public Color color = new Color(0.63671875f, 0.76953125f, 0.22265625f);
+        @Deprecated
         public void draw(GLProgram program){
             GLErrorLogger.check();
             int colorH = program.getUniformLocation("vColor");
@@ -335,7 +341,4 @@ public class ModelLoader2 {
         }
     }
 
-    public interface DrawableModel {
-        public void draw(float[] mvpm);
-    }
 }

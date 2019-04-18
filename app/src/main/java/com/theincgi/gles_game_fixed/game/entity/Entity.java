@@ -3,9 +3,10 @@ package com.theincgi.gles_game_fixed.game.entity;
 import com.theincgi.gles_game_fixed.geometry.AABB;
 import com.theincgi.gles_game_fixed.geometry.ModelLoader2;
 import com.theincgi.gles_game_fixed.geometry.ModelLoader3;
+import com.theincgi.gles_game_fixed.render.Camera;
 import com.theincgi.gles_game_fixed.utils.Location;
 
-public class Entity implements ModelLoader2.DrawableModel {
+public class Entity implements ModelLoader3.DrawableModel {
     Location location;
     ModelLoader3.Model model;
     AABB aabb;
@@ -30,7 +31,7 @@ public class Entity implements ModelLoader2.DrawableModel {
 
 
     @Override
-    public void draw(float[] mvpm) {
+    public void draw(float[] mvpm, Camera camera) {
         model.drawAll(mvpm, location);
     }
 

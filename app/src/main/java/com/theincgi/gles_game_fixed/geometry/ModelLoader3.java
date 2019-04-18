@@ -6,6 +6,7 @@ import android.nfc.FormatException;
 import android.opengl.GLES20;
 import android.util.Log;
 
+import com.theincgi.gles_game_fixed.render.Camera;
 import com.theincgi.gles_game_fixed.render.GLProgram;
 import com.theincgi.gles_game_fixed.render.GLPrograms;
 import com.theincgi.gles_game_fixed.utils.GLErrorLogger;
@@ -197,13 +198,7 @@ public class ModelLoader3 {
             Utils.matrixStack.pushMatrix();
             at.applyToStack();
 
-            float[] modelMatrix = at.getMatrix();
-
             int posH = program.getAttribLocation("vPosition");
-            int projectionH  = program.getUniformLocation("projectionMatrix");
-            int modelH       = program.getUniformLocation("modelMatrix");
-
-
             GLES20.glEnableVertexAttribArray(posH);
             GLES20.glVertexAttribPointer( posH,
                     3,//COORDS_PER_VERTEX,
@@ -212,11 +207,9 @@ public class ModelLoader3 {
                     vCoords);
             GLErrorLogger.check();
 
-            GLES20.glUniformMatrix4fv(projectionH, 1, false, mvpm,0 );
-            GLErrorLogger.check();
+            program.trySetMatrix("projectionMatrix", mvpm);
+            program.trySetMatrix("modelMatrix", at.getMatrix());
 
-            GLES20.glUniformMatrix4fv(modelH, 1, false, modelMatrix, 0);
-            GLErrorLogger.check();
         }
 
         private void cleanup(){
@@ -263,14 +256,20 @@ public class ModelLoader3 {
         boolean smoothShading = false;
 
 
-        public void draw(GLProgram program ){
-            int diffuseH = program.getUniformLocation("diffuse");
-            GLES20.glUniform4fv(diffuseH, 1, material.diffuse, 0);
-            GLErrorLogger.check();
+        public void draw(GLProgram program){
+            program.trySetUniform("diffuseColor", material.diffuse);
+            program.trySetUniform("ambientColor", material.ambient);
+            program.trySetUniform("specularColor", material.specularColor);
+            program.trySetUniform("specularExponent", material.specularExponent);
+            program.trySetUniform("opacity", material.opacity);
+
 
             GLES20.glDrawElements(GLES20.GL_TRIANGLES, iv.limit(), GLES20.GL_UNSIGNED_INT, iv);
 
         }
 
+    }
+    public interface DrawableModel {
+        public void draw(float[] mvpm, Camera camera);
     }
 }

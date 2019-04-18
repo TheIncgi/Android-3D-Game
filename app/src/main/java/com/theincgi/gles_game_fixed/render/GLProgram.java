@@ -55,6 +55,66 @@ public class GLProgram{
         return GLES20.glGetUniformLocation(program, name);
     }
 
+
+
+    public void trySetUniform( String name, int i ){
+        int handle = getUniformLocation( name );
+        if(handle == -1) return;
+        GLES20.glUniform1i( handle, i );
+        GLErrorLogger.check();
+    }
+    public void trySetUniform( String name, float f) {
+        int handle = getUniformLocation( name );
+        if(handle == -1) return;
+        GLES20.glUniform1f( handle, f );
+        GLErrorLogger.check();
+    }
+    public void trySetUniform( String name, float[] f){
+        int handle = getUniformLocation( name );
+        if(handle == -1) return;
+        switch (f.length){
+            case 0:
+                throw new RuntimeException("Empty float array!");
+            case 1:
+                GLES20.glUniform1fv(handle, 1, f, 0);
+                break;
+            case 2:
+                GLES20.glUniform2fv(handle, 1, f, 0);
+                break;
+            case 3:
+                GLES20.glUniform3fv(handle, 1, f, 0);
+                break;
+            case 4:
+                GLES20.glUniform4fv(handle, 1, f, 0);
+                break;
+            default:
+                throw new RuntimeException("Not a valid vector size ("+f.length+")");
+
+        }
+        GLErrorLogger.check();
+    }
+    public void trySetMatrix(String name, float[] m){
+        int handle = getUniformLocation( name );
+        if(handle == -1) return;
+        switch (m.length){
+            case 4:
+                GLES20.glUniformMatrix2fv(handle, 1, false, m, 0);
+                break;
+            case 9:
+                GLES20.glUniformMatrix3fv(handle, 1, false, m, 0);
+                break;
+            case 16:
+                GLES20.glUniformMatrix4fv(handle, 1, false, m, 0);
+                break;
+            default:
+                throw new RuntimeException("Not a valid matrix size");
+        }
+        GLErrorLogger.check();
+    }
+    public void trySetUniformTexture( String name ){
+        throw new RuntimeException("Unimplemented!");
+    }
+
     /**
      * called on finalization
      * */

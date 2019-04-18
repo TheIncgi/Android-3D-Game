@@ -12,7 +12,6 @@ import android.util.Log;
 import com.theincgi.gles_game_fixed.game.Engine;
 import com.theincgi.gles_game_fixed.game.entities.Ball;
 import com.theincgi.gles_game_fixed.geometry.MaterialManager;
-import com.theincgi.gles_game_fixed.geometry.ModelLoader2;
 import com.theincgi.gles_game_fixed.geometry.ModelLoader3;
 import com.theincgi.gles_game_fixed.geometry.Square;
 import com.theincgi.gles_game_fixed.geometry.Triangle;
@@ -45,7 +44,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
     public CustomGLSurfaceViewRenderer(Context context) {
         this.context = context;
         camera = new Camera(0,-3,-3, 0, 45, 0);
-        ModelLoader2.init(context);
+        //ModelLoader2.init(context);
         ModelLoader3.init(context);
         MaterialManager.init(context);
 
@@ -54,7 +53,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
     //Triangle triangle;
     //Square square;
     //ModelLoader2.Model cube;
-    ModelLoader2.Model model;
+
     /*
      * Use this method to perform actions that need to happen only once, such as
      * setting OpenGL environment parameters or initializing OpenGL graphic objects.
@@ -116,7 +115,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
                 projectionMatrix, 0,
                 camera.getMatrix(), 0);
 
-        Engine.instance().drawAll( mvpm );
+        Engine.instance().drawAll( mvpm, camera );
         //triangle.draw(mvpm);
         //square.draw(mvpm);
        // cube.getLocation().rotate( System.currentTimeMillis()/1000, 0 ,0);
