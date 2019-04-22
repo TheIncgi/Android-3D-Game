@@ -8,6 +8,8 @@ import com.theincgi.gles_game_fixed.utils.GLErrorLogger;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.FloatBuffer;
+
 import static android.opengl.GLES20.GL_VERTEX_SHADER;
 import static android.opengl.GLES20.GL_FRAGMENT_SHADER;
 
@@ -15,6 +17,9 @@ public class GLProgram{
     private static final String TAG = "#GLProgram";
     /*
     * Vertex shader transforms vertex coords*/
+
+    //make things quieter
+    private static boolean doWarnings = false;
 
     private int program;
 
@@ -55,23 +60,42 @@ public class GLProgram{
         return GLES20.glGetUniformLocation(program, name);
     }
 
-
-
-    public void trySetUniform( String name, int i ){
+    public boolean trySetVertexAttribArray(String key, FloatBuffer vCoords){
+        int posH = getAttribLocation( key );
+        if(posH==-1){warnMissingKey(key, "attribute vertex array"); return false;}
+        GLES20.glEnableVertexAttribArray(posH);
+        GLES20.glVertexAttribPointer( posH,
+                3,//COORDS_PER_VERTEX,
+                GLES20.GL_FLOAT, false,
+                3*Float.BYTES,//COORDS_PER_VERTEX*Float.BYTES,
+                vCoords);
+        GLErrorLogger.check();
+        return true;
+    }
+    public boolean tryDisableVertexAttribArray(String key){
+        int posH = getAttribLocation( key );
+        if(posH==-1) {warnMissingKey(key, "attribute vertex array"); return false;}
+        GLES20.glDisableVertexAttribArray( posH );
+        GLErrorLogger.check();
+        return true;
+    }
+    public boolean trySetUniform( String name, int i ){
         int handle = getUniformLocation( name );
-        if(handle == -1) return;
+        if(handle == -1){warnMissingKey(name, "integer"); return false;}
         GLES20.glUniform1i( handle, i );
         GLErrorLogger.check();
+        return true;
     }
-    public void trySetUniform( String name, float f) {
+    public boolean trySetUniform( String name, float f) {
         int handle = getUniformLocation( name );
-        if(handle == -1) return;
+        if(handle == -1){warnMissingKey(name, "float"); return false;}
         GLES20.glUniform1f( handle, f );
         GLErrorLogger.check();
+        return true;
     }
-    public void trySetUniform( String name, float[] f){
+    public boolean trySetUniform( String name, float[] f){
         int handle = getUniformLocation( name );
-        if(handle == -1) return;
+        if(handle == -1){warnMissingKey(name, "vec"+f.length); return false;}
         switch (f.length){
             case 0:
                 throw new RuntimeException("Empty float array!");
@@ -92,10 +116,11 @@ public class GLProgram{
 
         }
         GLErrorLogger.check();
+        return true;
     }
-    public void trySetMatrix(String name, float[] m){
+    public boolean trySetMatrix(String name, float[] m){
         int handle = getUniformLocation( name );
-        if(handle == -1) return;
+        if(handle == -1){warnMissingKey(name, "Matrix"); return false;}
         switch (m.length){
             case 4:
                 GLES20.glUniformMatrix2fv(handle, 1, false, m, 0);
@@ -110,9 +135,53 @@ public class GLProgram{
                 throw new RuntimeException("Not a valid matrix size");
         }
         GLErrorLogger.check();
+        return true;
     }
-    public void trySetUniformTexture( String name ){
+    public boolean trySetUniformTexture( String name ){
         throw new RuntimeException("Unimplemented!");
+    }
+
+//    public boolean trySetVertexAttribArray(FloatBuffer vCoords, String... possibleKeys){
+//        for (String key:possibleKeys) {
+//            if(trySetVertexAttribArray(key, vCoords)) return true;
+//        }
+//        return false;
+//    }
+//    public boolean tryDisableVertexAttribArray(String... possibleKeys){
+//        for(String key : possibleKeys)
+//            if(tryDisableVertexAttribArray(key)) return true;
+//        return false;
+//    }
+//    public boolean trySetUniform(int value, String... possibleKeys){
+//        for(String key:possibleKeys)
+//            if(trySetUniform( key, value )) return true;
+//        return false;
+//    }
+//    public boolean trySetUniform(float value, String... possibleKeys){
+//        for(String key:possibleKeys)
+//            if(trySetUniform( key, value )) return true;
+//        return false;
+//    }
+//    public boolean trySetUniform(float[] value, String... possibleKeys){
+//        for(String key:possibleKeys)
+//            if(trySetUniform( key, value )) return true;
+//        return false;
+//    }
+//    public boolean trySetMatrix(float[] m, String... possibleKeys){
+//        for(String key : possibleKeys)
+//            if(trySetMatrix(key, m)) return true;
+//        return false;
+//    }
+//    public boolean trySetUniformTexture(String... possibleKeys){
+//        for(String key : possibleKeys)
+//            if(trySetUniformTexture(key)) return true;
+//        return false;
+//    }
+
+
+    private void warnMissingKey(String key, String type){
+        if(doWarnings)
+        Log.w(TAG, String.format("warnMissingKey: \"%s\" for type '%s' in shader [%s]",key, type, GLPrograms.getNameOf(program)));
     }
 
     /**

@@ -175,7 +175,7 @@ public class ModelLoader3 {
     public static class Model {
         ArrayList<ModelObject> objects = new ArrayList<>();
         String modelName;
-        GLProgram program = GLPrograms.getDefault();
+        GLProgram program = GLPrograms.get("fancy");
         MaterialManager.MaterialLib materialLib;
         FloatBuffer vCoords, tCoords, nCoords;
 
@@ -198,26 +198,18 @@ public class ModelLoader3 {
             Utils.matrixStack.pushMatrix();
             at.applyToStack();
 
-            int posH = program.getAttribLocation("vPosition");
-            GLES20.glEnableVertexAttribArray(posH);
-            GLES20.glVertexAttribPointer( posH,
-                    3,//COORDS_PER_VERTEX,
-                    GLES20.GL_FLOAT, false,
-                    3*Float.BYTES,//COORDS_PER_VERTEX*Float.BYTES,
-                    vCoords);
-            GLErrorLogger.check();
-
-            program.trySetMatrix("projectionMatrix", mvpm);
+            program.trySetVertexAttribArray("position", vCoords);
+            program.trySetVertexAttribArray("normal", nCoords);
+            if(tCoords!=null)
+                program.trySetVertexAttribArray("uv", tCoords);
             program.trySetMatrix("modelMatrix", at.getMatrix());
+
 
         }
 
         private void cleanup(){
-            int posH = program.getAttribLocation("vPosition");
-            int projectionH  = program.getUniformLocation("projectionMatrix");
-            int modelH       = program.getUniformLocation("modelMatrix");
-            GLES20.glDisableVertexAttribArray(posH);
-
+            program.tryDisableVertexAttribArray("position");
+            program.tryDisableVertexAttribArray("normal");
             GLErrorLogger.check();
             Utils.matrixStack.popMatrix();
         }

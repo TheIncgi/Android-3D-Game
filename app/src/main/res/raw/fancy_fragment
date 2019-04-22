@@ -24,7 +24,7 @@ uniform float normalStrength;
 varying vec3 vPosition;
 varying vec3 vNormal;
 varying vec2 vUv;
-varying vec2 vUv2;
+//arying vec2 vUv2;
 
 vec3 toHSV( vec3 color );
 vec3 fromHSV( vec3 color );

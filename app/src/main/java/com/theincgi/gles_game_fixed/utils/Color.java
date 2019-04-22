@@ -4,6 +4,7 @@ import static com.theincgi.gles_game_fixed.utils.Utils.clamp;
 import static com.theincgi.gles_game_fixed.utils.Utils.inRange;
 
 public class Color {
+
     /**RGBA*/
     public float[] color;
     public Color(float r, float g, float b){

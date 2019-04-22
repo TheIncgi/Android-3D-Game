@@ -5,7 +5,9 @@ import android.content.Context;
 
 import com.theincgi.gles_game_fixed.utils.Pair;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.WeakHashMap;
 import com.theincgi.gles_game_fixed.R;
 
@@ -55,6 +57,12 @@ public class GLPrograms {
         }
         return materialLookup.get(key);
     }
+    public static GLProgram getIfLoaded(String key){
+        return materialLookup.get(key);
+    }
+    public static Collection<GLProgram> getLoadedPrograms(){
+        return materialLookup.values();
+    }
 
     public static GLProgram getDefault(){
         if (DEFAULT_PROGRAM == null) {
@@ -63,4 +71,10 @@ public class GLPrograms {
         return DEFAULT_PROGRAM;
     }
 
+    public static String getNameOf(int programNumber){
+        for(Map.Entry<String, GLProgram> e : materialLookup.entrySet()){
+            if(e.getValue().getProgram() == programNumber) return e.getKey();
+        }
+        return "?";
+    }
 }

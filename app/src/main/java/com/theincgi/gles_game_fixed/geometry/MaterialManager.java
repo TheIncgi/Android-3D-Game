@@ -64,7 +64,7 @@ public class MaterialManager {
                         current.ambient = new float[]{s.nextFloat(),s.nextFloat(),s.nextFloat()};
                         break;
                     case DIFFUSE:
-                        current.diffuse = new float[]{s.nextFloat(),s.nextFloat(),s.nextFloat(), 1};
+                        current.diffuse = new float[]{s.nextFloat(),s.nextFloat(),s.nextFloat()};
                         break;
                     case SPECULAR_COLOR:
                         current.specularColor = new float[]{s.nextFloat(),s.nextFloat(),s.nextFloat()};

@@ -8,6 +8,7 @@ import com.theincgi.gles_game_fixed.utils.Location;
 public class Camera {
     Location location;
     float[] matrix = new float[16];
+    float[] pos = new float[3];
     public Camera() {
         this(0,0,0);
     }
@@ -16,6 +17,7 @@ public class Camera {
     }
     public Camera(float x, float y, float z, float yaw, float pitch, float roll) {
         location = new Location(x, y, z, yaw, pitch, roll);
+
     }
 
 
@@ -26,4 +28,8 @@ public class Camera {
         return location.getMatrix();
     }
 
+    public float[] getPos() {
+        location.putPos( pos );
+        return pos;
+    }
 }

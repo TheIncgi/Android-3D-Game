@@ -96,6 +96,13 @@ public class Location {
         return roll;
     }
 
+    //copy xyz data into given array
+    public void putPos(float[] pos){
+        pos[0] = x;
+        pos[1] = y;
+        pos[2] = z;
+    }
+
     public float[] getMatrix(){
         Matrix.setIdentityM(matrix, 0);
 
