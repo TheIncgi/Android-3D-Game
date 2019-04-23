@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.theincgi.gles_game_fixed.game.Engine;
 import com.theincgi.gles_game_fixed.game.entities.Ball;
+import com.theincgi.gles_game_fixed.game.obstacles.Floor;
 import com.theincgi.gles_game_fixed.geometry.MaterialManager;
 import com.theincgi.gles_game_fixed.geometry.ModelLoader3;
 import com.theincgi.gles_game_fixed.geometry.Square;
@@ -19,6 +20,7 @@ import com.theincgi.gles_game_fixed.utils.Location;
 import com.theincgi.gles_game_fixed.utils.Task;
 
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 
 
@@ -86,6 +88,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
         //cube = modelLoader.load("cube");
         //model = ModelLoader2.get("pointer");
         Engine.instance().addEntity( new Ball() );
+        Engine.instance().addObstacale( new Floor(0f, 0f, 0f));
         //model.setProgram(GLPrograms.getDefault());
 //        // make adjustments for screen ratio
 //        float ratio = (float) width / height;

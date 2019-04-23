@@ -1,3 +1,4 @@
+#extension GL_OES_standard_derivatives : enable
 precision highp float;
 precision highp int;
 
@@ -22,7 +23,8 @@ uniform sampler2D normalMap;
 uniform float normalStrength;
 
 varying vec3 vPosition;
-varying vec3 vNormal;
+//varying vec3 vNormal;
+vec3 normal;
 varying vec2 vUv;
 //arying vec2 vUv2;
 
@@ -38,11 +40,14 @@ vec4 fromHSV( vec4 color );
 
 //https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
 
+vec3 reconstructNormal(vec3 world);
+
 void main() {
-
     vec3 worldPosition = ( modelMatrix * vec4( vPosition, 1.0 )).xyz;
+    normal = reconstructNormal(worldPosition);
 
-    vec3 worldNormal = normalize( vec3( modelMatrix * vec4( vNormal, 0.0 ) ) );
+
+    vec3 worldNormal = normalize( vec3( modelMatrix * vec4( normal, 0.0 ) ) );
     vec3 cameraNormal = cameraPosition - worldPosition;
 
     if( textureMode == 2 || textureMode == 3){
@@ -76,8 +81,15 @@ void main() {
     light = fromHSV( light );
 
 
-    gl_FragColor = vec4( light, 1.0 ); //* mat color
+    gl_FragColor = vec4( light, opacity ); //* mat color
 
+}
+
+vec3 reconstructNormal(vec3 positionWorldSpace)
+{
+    vec3 normalViewSpace = normalize(cross(dFdx(positionWorldSpace), dFdy(positionWorldSpace)));
+    vec3 normalWorldSpace = (vec4(normalViewSpace, 0.0) * modelMatrix).xyz;
+    return normalWorldSpace;
 }
 
 //https://www.rapidtables.com/convert/color/rgb-to-hsv.html

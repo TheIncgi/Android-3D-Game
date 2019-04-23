@@ -1,6 +1,7 @@
 package com.theincgi.gles_game_fixed.game;
 
 import com.theincgi.gles_game_fixed.game.entity.Entity;
+import com.theincgi.gles_game_fixed.game.obstacles.BaseObstacle;
 import com.theincgi.gles_game_fixed.render.Camera;
 import com.theincgi.gles_game_fixed.render.GLProgram;
 import com.theincgi.gles_game_fixed.render.GLPrograms;
@@ -17,9 +18,13 @@ import java.util.concurrent.TimeUnit;
 public class Engine {
     private static final Engine INSTANCE = new Engine();
     LinkedList<Entity> entities = new LinkedList<>();
+    LinkedList<BaseObstacle> obstacales = new LinkedList<>();
     LinkedList<Entity> toAdd = new LinkedList<>(), toRemove = new LinkedList<>();
     private boolean running = false;
     ScheduledFuture sortTimer;
+
+    LinkedList<BaseObstacle> obstToAdd = new LinkedList(), obstToRemove = new LinkedList();
+
     LightSource lightSource = new LightSource(0, 100, 0);
     float globalIlluminationBrightness = .3f;
 
@@ -33,6 +38,16 @@ public class Engine {
     public void onTick(){
         long time = System.currentTimeMillis();
 
+        synchronized (obstacales){
+            synchronized (obstToAdd){
+                obstacales.addAll(obstToAdd);
+                obstToAdd.clear();
+            }
+            synchronized (obstToRemove){
+                obstacales.removeAll(obstToRemove);
+                obstToRemove.clear();
+            }
+        }
         synchronized (entities){
             synchronized (toAdd) {
                 entities.addAll( toAdd );
@@ -44,10 +59,15 @@ public class Engine {
             }
         }
 
+
         Iterator<Entity> eIter = entities.iterator();
         while(eIter.hasNext()) {
-            eIter.next().onTick( time );
+            eIter.next().onTick( this, time );
         }
+    }
+
+    public Iterator<BaseObstacle> getObstacleItterator(){
+        return obstacales.iterator();
     }
 
     public void addEntity(Entity entity){
@@ -55,14 +75,29 @@ public class Engine {
             toAdd.addLast(entity);
         }
     }
+    public void addObstacale(BaseObstacle obst){
+        synchronized (obstToAdd){
+            obstToAdd.addLast(obst);
+        }
+    }
     public void removeEntity(Entity entity){
         synchronized (toRemove) {
             toRemove.addLast(entity);
         }
     }
+    public void removeObstacle(BaseObstacle obst){
+        synchronized (obstToRemove) {
+            obstToRemove.addLast(obst);
+        }
+    }
     public void clearEntities() {
         synchronized (toRemove) {
             toRemove.addAll(entities);
+        }
+    }
+    public void clearObstacles() {
+        synchronized (obstToRemove) {
+            obstToRemove.addAll(obstacales);
         }
     }
 
@@ -100,6 +135,11 @@ public class Engine {
         synchronized (entities){
             for(Entity e : entities){
                 e.draw(mvpm, camera);
+            }
+        }
+        synchronized (obstacales){
+            for(BaseObstacle o : obstacales){
+                o.draw(mvpm, camera);
             }
         }
     }

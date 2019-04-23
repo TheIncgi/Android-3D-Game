@@ -199,7 +199,7 @@ public class ModelLoader3 {
             at.applyToStack();
 
             program.trySetVertexAttribArray("position", vCoords);
-            program.trySetVertexAttribArray("normal", nCoords);
+           // program.trySetVertexAttribArray("normal", nCoords);
             if(tCoords!=null)
                 program.trySetVertexAttribArray("uv", tCoords);
             program.trySetMatrix("modelMatrix", at.getMatrix());
@@ -209,7 +209,7 @@ public class ModelLoader3 {
 
         private void cleanup(){
             program.tryDisableVertexAttribArray("position");
-            program.tryDisableVertexAttribArray("normal");
+            //program.tryDisableVertexAttribArray("normal");
             GLErrorLogger.check();
             Utils.matrixStack.popMatrix();
         }
