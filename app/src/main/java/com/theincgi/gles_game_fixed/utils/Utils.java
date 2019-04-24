@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
@@ -182,5 +183,34 @@ public class Utils {
         GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, img, 0);
         GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
         return texId[0];
+    }
+
+    public static class CollisionTests {
+        public static boolean sphereContains(Location point, Location center, float radius){
+            return distance(point, center) <= radius;
+        }
+        public static boolean cylinderContains(Location point, Location topCenter, float radius, float x, float y, float z, float dx, float dy, float dz){
+            float[] transform = new float[16];
+            float[] p = new float[]{dx, dy, dz, 1};
+            Matrix.setIdentityM(transform, 0);
+
+            float rotXY = (float)Math.atan2(dy, dx);
+            Matrix.rotateM(transform, 0, -rotXY, 0,0,1); //rotate about z axis
+            Matrix.multiplyMM(p, 0, transform, 0, p, 0); //p = T*p
+            //changes point to be rotated
+
+            float rotZY = (float)Math.atan2(p[1],p[2]); //atan2( z, y ) after rotation 1
+            Matrix.rotateM(transform, 0, -rotZY, 1, 0, 0); //rotate about x axis
+
+            float cylHeight = distance(0,0,0, dx, dy, dz);
+
+            point.putPos( p ); //p now contains test point
+            Matrix.multiplyMM(p, 0, transform, 0, p, 0); //rotate to test space
+
+            //distance testPoint's xz to cyl's xz is < radius
+            boolean inCircle = distance( p[0], 0, p[2], x, 0, z  ) <= radius;
+            if(!inCircle) return false;
+            return inRange(p[1], y, y+cylHeight); //inside height of cylinder
+        }
     }
 }
