@@ -50,6 +50,7 @@ public class Utils {
     public static float clamp(float x, float low, float high){
         return Math.max(low, Math.min(x, high));
     }
+    /**Says matrix, can be any array*/
     public static float[] clone(float[] matrix){
         float[] output = new float[matrix.length];
         System.arraycopy(matrix,0, output, 0, matrix.length);
@@ -199,9 +200,20 @@ public class Utils {
         public static boolean sphereContains(Location point, Location center, float radius){
             return distance(point, center) <= radius;
         }
-        public static boolean cylinderContains(Location point, Location topCenter, float radius, float x, float y, float z, float dx, float dy, float dz){
+        public static boolean sphereContains(float[] point, Location center, float radius){
+            return distance(center, point[0], point[1], point[2]) <= radius;
+        }
+        public static boolean sphereContains(float[] point, float cx, float cy, float cz, float radius){
+            return distance(cx, cy, cz, point[0], point[1], point[2]) <= radius;
+        }
+
+        public static boolean cylinderContains(Location point, Location topCenter, float radius, float x, float y, float z, float dx, float dy, float dz) {
+        }
+        public static boolean cylinderContains(float[] point, Location topCenter, float radius, float dx, float dy, float dz){
             float[] transform = new float[16];
             float[] p = new float[]{dx, dy, dz, 1};
+            float[] topCyl = new float[4];
+            topCenter.putPos(topCyl);
             Matrix.setIdentityM(transform, 0);
 
             float rotXY = (float)Math.atan2(dy, dx);
@@ -215,23 +227,26 @@ public class Utils {
 
             float cylHeight = distance(0,0,0, dx, dy, dz);
 
-            point.putPos( p ); //p now contains test point
+            p = Utils.clone(point); //p now contains test point
             Matrix.multiplyMV(p, 0, transform, 0, p, 0); //rotate to test space
-
+            Matrix.multiplyMV(topCyl, 0 , transform, 0, topCyl, 0);
             //distance testPoint's xz to cyl's xz is < radius
-            boolean inCircle = distance( p[0], 0, p[2], x, 0, z  ) <= radius;
+            boolean inCircle = distance( p[0], 0, p[2], topCyl[0], 0, topCyl[2]  ) <= radius;
             if(!inCircle) return false;
-            return inRange(p[1], y, y+cylHeight); //inside height of cylinder
-            //TODO Unit test this
+            return inRange(p[1], topCyl[1], topCyl[1]+cylHeight); //inside height of cylinder
+            //TODO Unit test this CHECK ME
         }
         //by checking if the point returned by this function is in the sphere of the current location, or the previous location of the ball
         //or anywhere in the cylinder of movement we chan check for collisions completly
         /**Values are return in {x,y,z,1} format*/
-        public float[] nearestPointToPlane(Location objCenter, Location pointOnPlane, float normX, float normY, float normZ){
+        public static float[] nearestPointToPlane(Location objCenter, Location pointOnPlane, float normX, float normY, float normZ) {
+            return nearestPointToPlane(objCenter, pointOnPlane, new float[] {normX, normY, normZ});
+        }
+        public static float[] nearestPointToPlane(Location objCenter, Location pointOnPlane, float[] norm){
             //could also be implented by vector projection if translated
 
             float[] transform = new float[16];
-            float[] pos = new float[]{ normX, normY, normZ };
+            float[] pos = Utils.clone(norm);
             Matrix.setIdentityM(transform, 0);
 
             float rotXY = (float)Math.atan2(pos[1], pos[0]); //y,x

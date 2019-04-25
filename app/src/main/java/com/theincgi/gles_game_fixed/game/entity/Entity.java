@@ -46,5 +46,15 @@ public class Entity implements ModelLoader3.DrawableModel {
         model.drawAll(mvpm, location);
     }
 
+    public float getVelocityX() {
+        return velocityX;
+    }
 
+    public float getVelocityY() {
+        return velocityY;
+    }
+
+    public float getVelocityZ() {
+        return velocityZ;
+    }
 }

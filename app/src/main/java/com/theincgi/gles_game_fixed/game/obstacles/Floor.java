@@ -24,9 +24,19 @@ public class Floor extends BaseObstacle{
         Location l = e.getLocation();
         if(e instanceof Ball) {
             Ball ball = ((Ball) e);
-            if (Utils.inRange(location.getY(), l.getY() - ball.getRadius(), l.getY() + ball.getRadius())){
-                return true;
-            }
+//            if (Utils.inRange(location.getY(), l.getY() - ball.getRadius(), l.getY() + ball.getRadius())){
+//                return true;
+//            }
+            float[] near = Utils.CollisionTests.nearestPointToPlane(e.getLocation(), location, normal);
+            return Utils.CollisionTests.sphereContains(near, e.getLocation(), ball.getRadius()) ||
+                   Utils.CollisionTests.sphereContains(
+                           near,
+                       e.getLocation().getX() + e.getVelocityX(),
+                        e.getLocation().getY() + e.getVelocityY(),
+                        e.getLocation().getZ() + e.getVelocityZ(),
+                           ball.getRadius()) ||
+                    Utils.CollisionTests.cylinderContains(near, e.getLocation(), ball.getRadius(),
+                            e.getVelocityX(), e.getVelocityY(), e.getVelocityZ());
         }
         return false;
     }
