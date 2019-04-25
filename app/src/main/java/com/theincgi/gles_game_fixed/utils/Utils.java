@@ -35,6 +35,12 @@ public class Utils {
             min = Math.min(min, values[i]);
         return min;
     }
+
+    //https://www.arduino.cc/reference/en/language/functions/math/map/
+    float map(float x, float in_min, float in_max, float out_min, float out_max) {
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    }
+
     public static float distance(Location a, Location b){ return distance(a, b.getX(), b.getY(), b.getZ());}
     public static float distance(Location l, float x, float y, float z){ return distance(l.getX(), l.getY(), l.getZ(), x, y, z); }
     public static float distance( float a, float b, float c, float x, float y, float z ){
@@ -56,6 +62,10 @@ public class Utils {
         while((cursor = (s.indexOf(c, cursor+1))) != -1)
             out++;
         return out;
+    }
+
+    public static float dotProduct(float x, float y, float z, float a, float b, float c){
+        return x*a + y*b + z*c;
     }
 
 
@@ -195,22 +205,56 @@ public class Utils {
             Matrix.setIdentityM(transform, 0);
 
             float rotXY = (float)Math.atan2(dy, dx);
-            Matrix.rotateM(transform, 0, -rotXY, 0,0,1); //rotate about z axis
-            Matrix.multiplyMM(p, 0, transform, 0, p, 0); //p = T*p
+            Matrix.rotateM(transform, 0, -rotXY+90, 0,0,1); //rotate about z axis
+            Matrix.multiplyMV(p, 0, transform, 0, p, 0); //p = T*p
             //changes point to be rotated
 
+
             float rotZY = (float)Math.atan2(p[1],p[2]); //atan2( z, y ) after rotation 1
-            Matrix.rotateM(transform, 0, -rotZY, 1, 0, 0); //rotate about x axis
+            Matrix.rotateM(transform, 0, -rotZY+90, 1, 0, 0); //rotate about x axis
 
             float cylHeight = distance(0,0,0, dx, dy, dz);
 
             point.putPos( p ); //p now contains test point
-            Matrix.multiplyMM(p, 0, transform, 0, p, 0); //rotate to test space
+            Matrix.multiplyMV(p, 0, transform, 0, p, 0); //rotate to test space
 
             //distance testPoint's xz to cyl's xz is < radius
             boolean inCircle = distance( p[0], 0, p[2], x, 0, z  ) <= radius;
             if(!inCircle) return false;
             return inRange(p[1], y, y+cylHeight); //inside height of cylinder
+            //TODO Unit test this
+        }
+        //by checking if the point returned by this function is in the sphere of the current location, or the previous location of the ball
+        //or anywhere in the cylinder of movement we chan check for collisions completly
+        /**Values are return in {x,y,z,1} format*/
+        public float[] nearestPointToPlane(Location objCenter, Location pointOnPlane, float normX, float normY, float normZ){
+            //could also be implented by vector projection if translated
+
+            float[] transform = new float[16];
+            float[] pos = new float[]{ normX, normY, normZ };
+            Matrix.setIdentityM(transform, 0);
+
+            float rotXY = (float)Math.atan2(pos[1], pos[0]); //y,x
+            Matrix.rotateM(transform, 0, -rotXY+90, 0, 0, 1); //rotate about z axis
+
+            Matrix.multiplyMV(pos, 0, transform, 0, pos, 0);
+
+            float rotZY = (float) Math.atan2(pos[1], pos[2]); //y,x
+            Matrix.rotateM(transform, 0, rotZY, 1, 0, 0); //rotate about x axis
+            //normal is now facing up if original is mulitiplied with transform
+
+            objCenter.putPos(pos);
+            Matrix.multiplyMV(pos, 0, transform, 0, pos, 0);
+            float[] planePos = new float[]{ pointOnPlane.getX(), pointOnPlane.getY(), pointOnPlane.getZ(), 1};
+            Matrix.multiplyMV(planePos, 0, transform, 0, planePos, 0);
+            pos[1] = planePos[1]; //drop/raise point onto plane
+
+            Matrix.setIdentityM(transform, 0);
+            Matrix.rotateM(transform, 0, rotZY, 1, 0, 0);
+            Matrix.rotateM(transform, 0, rotXY, 0, 0, 1);
+            Matrix.multiplyMV(pos, 0, transform, 0, pos, 0);
+            return pos;
+            //TODO unit test this
         }
     }
 }
