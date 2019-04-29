@@ -65,10 +65,39 @@ public class Utils {
         return out;
     }
 
+    public static float dotProduct(float[] a, float[] b){
+        return dotProduct(a[0],a[1],a[2],  b[0],b[1],b[2]);
+    }
     public static float dotProduct(float x, float y, float z, float a, float b, float c){
         return x*a + y*b + z*c;
     }
 
+    /**Returns v scaled, operates on given vector (doesn't make a new one!)*/
+    public static float[] scalar(float s, float[] v){
+        for(int i = 0; i<v.length; i++){
+            v[i] = s*v[i];
+        }
+        return v;
+    }
+
+    /**Assumes normal is normalized (magnitude == 1)*/
+    public static float[] reflect(float[] vector, float[] normal){
+        //https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
+        //r=d−2(d⋅n)n
+        //r = reflection
+        //d = ray to be reflected
+        //n = normal
+
+        float[] temp = normal.clone();
+        float dot = dotProduct(vector, normal);
+        temp = scalar(dot, temp);
+        temp = scalar(2, temp);
+        for(int i = 0; i<3; i++){
+            temp[i] = vector[i] - temp[i];
+        }
+        temp[3] = 1;
+        return temp;
+    }
 
     public static int[] unpackIntList(ArrayList<int[]> a, int pos){
         int[] out = new int[a.size()];
@@ -208,6 +237,9 @@ public class Utils {
         }
 
         public static boolean cylinderContains(Location point, Location topCenter, float radius, float x, float y, float z, float dx, float dy, float dz) {
+            float[] pointArray = new float[4];
+            point.putPos(pointArray);
+            return cylinderContains(pointArray, topCenter, radius, dx, dy, dz);
         }
         public static boolean cylinderContains(float[] point, Location topCenter, float radius, float dx, float dy, float dz){
             float[] transform = new float[16];
@@ -216,13 +248,13 @@ public class Utils {
             topCenter.putPos(topCyl);
             Matrix.setIdentityM(transform, 0);
 
-            float rotXY = (float)Math.atan2(dy, dx);
+            float rotXY = (float)Math.toDegrees(Math.atan2(dy, dx));
             Matrix.rotateM(transform, 0, -rotXY+90, 0,0,1); //rotate about z axis
             Matrix.multiplyMV(p, 0, transform, 0, p, 0); //p = T*p
             //changes point to be rotated
 
 
-            float rotZY = (float)Math.atan2(p[1],p[2]); //atan2( z, y ) after rotation 1
+            float rotZY = (float)Math.toDegrees(Math.atan2(p[1],p[2])); //atan2( z, y ) after rotation 1
             Matrix.rotateM(transform, 0, -rotZY+90, 1, 0, 0); //rotate about x axis
 
             float cylHeight = distance(0,0,0, dx, dy, dz);
@@ -249,13 +281,13 @@ public class Utils {
             float[] pos = Utils.clone(norm);
             Matrix.setIdentityM(transform, 0);
 
-            float rotXY = (float)Math.atan2(pos[1], pos[0]); //y,x
+            float rotXY = (float)Math.toDegrees(Math.atan2(pos[1], pos[0])); //y,x
             Matrix.rotateM(transform, 0, -rotXY+90, 0, 0, 1); //rotate about z axis
 
             Matrix.multiplyMV(pos, 0, transform, 0, pos, 0);
 
-            float rotZY = (float) Math.atan2(pos[1], pos[2]); //y,x
-            Matrix.rotateM(transform, 0, rotZY, 1, 0, 0); //rotate about x axis
+            float rotZY = (float) Math.toDegrees(Math.atan2(pos[1], pos[2])); //y,x
+            Matrix.rotateM(transform, 0, -rotZY+90, 1, 0, 0); //rotate about x axis
             //normal is now facing up if original is mulitiplied with transform
 
             objCenter.putPos(pos);

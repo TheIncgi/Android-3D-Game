@@ -10,6 +10,7 @@ import com.theincgi.gles_game_fixed.utils.Location;
 import com.theincgi.gles_game_fixed.utils.Utils;
 
 public class Floor extends BaseObstacle{
+   // private float[] transform = new float[16];
     public Floor() {
         this(0,0,0);
     }
@@ -17,6 +18,7 @@ public class Floor extends BaseObstacle{
     public Floor(float x, float y, float z) {
         super(x, y, z);
         model = ModelLoader3.get("floor");
+        //Matrix.setIdentityM(transform, 0);
     }
 
     @Override
@@ -44,8 +46,6 @@ public class Floor extends BaseObstacle{
 
     @Override
     public float[] getNormal(Entity e) {
-        float[] tmp = new float[4];
-        Matrix.multiplyMM(tmp, 0, location.getMatrix(), 0, normal, 0);
-        return tmp;
+        return normal;
     }
 }

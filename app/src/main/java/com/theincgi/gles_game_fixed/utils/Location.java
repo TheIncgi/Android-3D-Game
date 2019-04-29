@@ -101,33 +101,36 @@ public class Location {
         pos[0] = x;
         pos[1] = y;
         pos[2] = z;
+        if(pos.length>3)
+            pos[3] = 1;
     }
 
     public float[] getMatrix(){
         Matrix.setIdentityM(matrix, 0);
 
+        Matrix.translateM(matrix, 0, getX(),getY(),getZ());
         Matrix.rotateM(matrix, 0, getRoll(),  0, 0, 1);
         Matrix.rotateM(matrix, 0, getPitch(), 1, 0, 0);
         Matrix.rotateM(matrix, 0, getYaw(),   0, 1, 0);
 
 
-        Matrix.translateM(matrix, 0, getX(),getY(),getZ());
-
         return matrix;
     }
+
+
 
     public void applyToStack(){
         float[] matrix = Utils.matrixStack.get();
         applyToMatrix(matrix);
     }
     public void applyToMatrix(float[] matrix){
-
+        Matrix.translateM(matrix, 0, getX(),getY(),getZ());
         Matrix.rotateM(matrix, 0, getRoll(),  0, 0, 1);
         Matrix.rotateM(matrix, 0, getPitch(), 0, 1, 0);
         Matrix.rotateM(matrix, 0, getYaw(),   1, 0, 0);
 
 
-        Matrix.translateM(matrix, 0, getX(),getY(),getZ());
+
     }
 
     private float interpolate(float a, float b, float f){

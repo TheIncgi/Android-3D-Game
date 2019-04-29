@@ -22,10 +22,14 @@ public class Camera {
 
 
     public float[] getMatrix(){
-//        Matrix.setIdentityM(matrix,  0);
-////        location.applyToMatrix(matrix);
-////        return matrix;
-        return location.getMatrix();
+        Matrix.setIdentityM(matrix, 0);
+
+        Matrix.rotateM(matrix, 0, location.getRoll(),  0, 0, 1);
+        Matrix.rotateM(matrix, 0, location.getPitch(), 1, 0, 0);
+        Matrix.rotateM(matrix, 0, location.getYaw(),   0, 1, 0);
+
+        Matrix.translateM(matrix, 0, location.getX(),location.getY(),location.getZ());
+        return matrix;
     }
 
     public float[] getPos() {
