@@ -7,8 +7,8 @@ public class GLErrorLogger {
 
     public static void check(){
         int code = GLES20.glGetError();
-        if(code!=GLES20.GL_NO_ERROR)
-            throw new GL_Exception(code);
+//        if(code!=GLES20.GL_NO_ERROR)
+//            throw new GL_Exception(code);
     }
 
     public static class GL_Exception extends RuntimeException {

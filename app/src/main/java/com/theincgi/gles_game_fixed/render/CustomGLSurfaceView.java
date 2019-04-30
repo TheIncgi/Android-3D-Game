@@ -20,7 +20,6 @@ public class CustomGLSurfaceView extends GLSurfaceView {
 
     public CustomGLSurfaceView(Context context, AttributeSet attrs) {
         this(context);
-
     }
 
     public CustomGLSurfaceView(Context context) {

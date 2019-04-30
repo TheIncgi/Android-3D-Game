@@ -1,5 +1,12 @@
 package com.theincgi.gles_game_fixed.game;
 
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.opengl.Matrix;
+
 import com.theincgi.gles_game_fixed.game.entity.Entity;
 import com.theincgi.gles_game_fixed.game.obstacles.BaseObstacle;
 import com.theincgi.gles_game_fixed.render.Camera;
@@ -7,7 +14,9 @@ import com.theincgi.gles_game_fixed.render.GLProgram;
 import com.theincgi.gles_game_fixed.render.GLPrograms;
 import com.theincgi.gles_game_fixed.render.LightSource;
 import com.theincgi.gles_game_fixed.utils.Location;
+import com.theincgi.gles_game_fixed.utils.Utils;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.concurrent.Executors;
@@ -16,28 +25,67 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class Engine {
-    private static final Engine INSTANCE = new Engine();
+    private static Engine INSTANCE;
     LinkedList<Entity> entities = new LinkedList<>();
     LinkedList<BaseObstacle> obstacales = new LinkedList<>();
     LinkedList<Entity> toAdd = new LinkedList<>(), toRemove = new LinkedList<>();
     private boolean running = false;
     ScheduledFuture sortTimer;
-
+    private static float[] defaultGravity = {0,-.05f, 0};
+    public float[] gravity;
     LinkedList<BaseObstacle> obstToAdd = new LinkedList(), obstToRemove = new LinkedList();
 
     LightSource lightSource = new LightSource(0, 100, 0);
     float globalIlluminationBrightness = .3f;
+    private Sensor rotationSensor;
 
-    private Engine(){
-
+    public static void init(Context context){
+        INSTANCE = INSTANCE==null? new Engine( context ) : INSTANCE;
     }
+
+
+    private Engine(Context context){
+        SensorManager sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+        sensorManager.registerListener(
+                onSensorEvent,
+                rotationSensor,
+                1_000_000/Engine.ticksPerSecond());
+    }
+
+    private static int ticksPerSecond() {
+        return 20;
+    }
+
+    private SensorEventListener onSensorEvent = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            if(event.sensor .equals( rotationSensor )) {
+                gravity = Utils.scalar(-0.05f, Utils.normalize(event.values));
+            }
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+    };
     public static Engine instance() {
         return INSTANCE;
     }
 
-    public void onTick(){
+    public void onTick() {
         long time = System.currentTimeMillis();
 
+//        {
+//        float[] m = Utils.matrixStack.get();
+//        Matrix.setIdentityM(m, 0);
+//        Matrix.rotateM(m, 0, rotationSensor., 0, 0, 1);
+//        Matrix.rotateM(m, 0, getPitch(), 0, 1, 0);
+//        Matrix.rotateM(m, 0, getYaw(), 1, 0, 0);
+//        Matrix.multiplyMM(gravity, 0, );
+//        Utils.matrixStack.popMatrix();
+//        }
         synchronized (obstacales){
             synchronized (obstToAdd){
                 obstacales.addAll(obstToAdd);
@@ -109,7 +157,7 @@ public class Engine {
             public void run() {
                 onTick();
             }
-        }, 0, 50, TimeUnit.MILLISECONDS);
+        }, 0, 1000/ticksPerSecond(), TimeUnit.MILLISECONDS);
     }
     public void stop(){
         if(sortTimer!=null)

@@ -11,6 +11,8 @@ import android.util.Log;
 
 import com.theincgi.gles_game_fixed.game.Engine;
 import com.theincgi.gles_game_fixed.game.entities.Ball;
+import com.theincgi.gles_game_fixed.game.levels.Level;
+import com.theincgi.gles_game_fixed.game.levels.TestLevel;
 import com.theincgi.gles_game_fixed.game.obstacles.AngledFloor;
 import com.theincgi.gles_game_fixed.game.obstacles.Floor;
 import com.theincgi.gles_game_fixed.geometry.MaterialManager;
@@ -41,6 +43,8 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
     Camera camera;
     Location origin = new Location();
 
+    Level level = new TestLevel();
+
     private Queue<Task> tasks = new LinkedList<>();
     private LinkedList<IRenderable> renderables = new LinkedList<>();
 
@@ -48,6 +52,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
         this.context = context;
         camera = new Camera(0,-3,-3, 0, 45, 0);
         //ModelLoader2.init(context);
+        Engine.init( context );
         ModelLoader3.init(context);
         MaterialManager.init(context);
 
@@ -88,18 +93,10 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
         //square   = new Square();
         //cube = modelLoader.load("cube");
         //model = ModelLoader2.get("pointer");
-        Engine.instance().addEntity( new Ball() );
-        Engine.instance().addObstacale(
-                new AngledFloor(0f, 0f, 0f).setAngle(0,0,0)
-        );Engine.instance().addObstacale(
-                new AngledFloor(8f, 0f, 0f).setAngle(0,0,0)
-        );Engine.instance().addObstacale(
-                new AngledFloor(0f, 0f, 8f).setAngle(0,0,0)
-        );Engine.instance().addObstacale(
-                new AngledFloor(-8f, 0f, 0f).setAngle(0,0,0)
-        );Engine.instance().addObstacale(
-                new AngledFloor(0f, 0f, -8f).setAngle(0,0,0)
-        );
+
+        //TODO load level with intent
+        level.load();
+
         //model.setProgram(GLPrograms.getDefault());
 //        // make adjustments for screen ratio
 //        float ratio = (float) width / height;

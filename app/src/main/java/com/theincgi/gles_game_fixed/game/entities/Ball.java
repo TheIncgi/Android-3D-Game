@@ -18,13 +18,13 @@ public class Ball extends Entity {
     float[] rotationMatrix = new float[16];
     public Ball() {
         super( "sphere" );
-        location = new Location(0,15,0);
+        location = new Location(0,2,0);
         Matrix.setIdentityM(rotationMatrix,0);
     }
 
     @Override
     public void onTick(Engine e, long time) {
-
+        float[] gravity = Engine.instance().gravity;
 
         ArrayList<BaseObstacle> colliding = new ArrayList();
         Iterator<BaseObstacle> iterator = e.getObstacleItterator();
@@ -43,7 +43,7 @@ public class Ball extends Entity {
         float speed = Utils.distance(0,0,0,velocityX, velocityY,velocityZ);
         if(colliding.size()>0){
 
-            if(speed > Math.abs(gravity)){
+            if(speed > Utils.magnitude(gravity)){
                 //TODO bounce ball in reflection angles
                 //TODO move ball to height based on 'progress' passing past intersecting point
                 Utils.scalar(speed * .33f, avgReflect);
@@ -60,7 +60,9 @@ public class Ball extends Entity {
             onGround = false;
         }
         if(!onGround){
-            velocityY += gravity;
+            velocityX += gravity[0];
+            velocityY += gravity[1];
+            velocityZ += gravity[2];
         }else{
             //rolling code needed
 
@@ -78,6 +80,7 @@ public class Ball extends Entity {
         }
         //Matrix.rotateM(rotationMatrix, 0, 3, 1,0,1);
         //location.setPitch(location.getPitch()+1);
+
     }
 
     public float getRadius() {

@@ -36,6 +36,14 @@ public class Utils {
         return min;
     }
 
+    public static float magnitude(float[] v) {
+        return distance(0,   0,   0, v[0],v[1],v[2]);
+    }
+
+    public static float[] normalize(float[] v) {
+        return scalar(1/magnitude(v), v );
+    }
+
     //https://www.arduino.cc/reference/en/language/functions/math/map/
     float map(float x, float in_min, float in_max, float out_min, float out_max) {
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
