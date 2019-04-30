@@ -7,6 +7,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.opengl.Matrix;
 
+import com.theincgi.gles_game_fixed.game.entities.Ball;
 import com.theincgi.gles_game_fixed.game.entity.Entity;
 import com.theincgi.gles_game_fixed.game.obstacles.BaseObstacle;
 import com.theincgi.gles_game_fixed.render.Camera;
@@ -108,9 +109,17 @@ public class Engine {
         }
 
 
+
         Iterator<Entity> eIter = entities.iterator();
         while(eIter.hasNext()) {
-            eIter.next().onTick( this, time );
+            Entity e = eIter.next();
+            if(e instanceof Ball){
+                if(e.getLocation().getY() < -10){
+                    e.getLocation().setPos(0,2,0);
+                    e.setVelocity(0,0,0);
+                }
+            }
+            e.onTick( this, time );
         }
     }
 

@@ -9,7 +9,7 @@ import com.theincgi.gles_game_fixed.utils.Location;
 
 public class Entity implements ModelLoader3.DrawableModel {
     protected Location location;
-    ModelLoader3.Model model;
+    protected ModelLoader3.Model model;
     AABB aabb;
 
     protected float velocityX, velocityY, velocityZ;
@@ -56,5 +56,11 @@ public class Entity implements ModelLoader3.DrawableModel {
 
     public float getVelocityZ() {
         return velocityZ;
+    }
+
+    public void setVelocity(float x, float y, float z) {
+        velocityY = y;
+        velocityX = x;
+        velocityZ = z;
     }
 }

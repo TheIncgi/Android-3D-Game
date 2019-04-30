@@ -9,7 +9,7 @@ public class TestLevel extends Level{
     public void load() {
         Engine.instance().addEntity( new Ball() );
         Engine.instance().addObstacale(
-                new AngledFloor(0f, 0f, 0f).setAngle(0,0,3)
+                new AngledFloor(0f, 0f, 0f).setAngle(0,0,5)
         );Engine.instance().addObstacale(
                 new AngledFloor(8f, 0f, 0f).setAngle(0,0,0)
         );Engine.instance().addObstacale(
@@ -21,9 +21,9 @@ public class TestLevel extends Level{
         );
 
         Engine.instance().addObstacale(
-                new AngledFloor(-2f, -.5f, 0f).setAngle(0,10,0)
+                new AngledFloor(-2f, -4f, -1f).setAngle(0,10,0)
         );Engine.instance().addObstacale(
-                new AngledFloor(-2f, -.5f, 1f).setAngle(0,-10,0)
+                new AngledFloor(-2f, -8f, 1f).setAngle(0,-10,0)
         );
     }
 }

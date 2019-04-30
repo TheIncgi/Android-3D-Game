@@ -223,9 +223,13 @@ public class ModelLoader3 {
         public int numObjs() {
             return objects.size();
         }
+
+        public ArrayList<ModelObject> getObjects() {
+            return objects;
+        }
     }
 
-    private static class ModelObject {
+    public static class ModelObject {
         ArrayList<MaterialGroup> materials = new ArrayList<>();
         String name;
 
@@ -236,13 +240,14 @@ public class ModelLoader3 {
             for(MaterialGroup materialGroup : materials){
                 materialGroup.draw(program);
             }
+        }
 
-
-
+        public ArrayList<MaterialGroup> getMaterials() {
+            return materials;
         }
     }
 
-    private static class MaterialGroup {
+    public static class MaterialGroup {
         MaterialManager.Material material;
         IntBuffer iv, it, in;
         boolean smoothShading = false;
@@ -260,6 +265,9 @@ public class ModelLoader3 {
 
         }
 
+        public MaterialManager.Material getMaterial() {
+            return material;
+        }
     }
     public interface DrawableModel {
         public void draw(float[] mvpm, Camera camera);

@@ -79,6 +79,15 @@ public class Utils {
     public static float dotProduct(float x, float y, float z, float a, float b, float c){
         return x*a + y*b + z*c;
     }
+    public static void crossProduct(float[] r, float[] v1, float[] v2){
+        int X = 0, Y = 1, Z = 2;
+        int A = 0, B = 1, C = 2;
+        r[0] = v1[Y]*v2[C] - v1[Z]*v2[B];
+        r[1] = v1[X]*v2[C] - v1[Z]*v2[A];
+        r[2] = v1[X]*v2[B] - v1[Y]*v2[A];
+        if(r.length>=4)
+            r[3] = 1;
+    }
 
     /**Returns v scaled, operates on given vector (doesn't make a new one!)*/
     public static float[] scalar(float s, float[] v){

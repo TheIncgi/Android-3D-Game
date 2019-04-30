@@ -105,12 +105,12 @@ public class MaterialManager {
     }
 
     public static class Material {
-        float[] ambient,
+        public float[] ambient,
                 diffuse,
                 specularColor,
                 emmissive;
-        float opacity = 1,specularExponent =1;
-        int illumMode;
+        public float opacity = 1,specularExponent =1;
+        public int illumMode;
 //0. Color on and Ambient off
 //1. Color on and Ambient on
 //2. Highlight on                  //common
@@ -122,9 +122,9 @@ public class MaterialManager {
 //8. Reflection on and Ray trace off
 //9. Transparency: Glass on, Reflection: Ray trace off
 //10. Casts shadows onto invisible surfaces
-        Integer diffuseMap = null;
-        Integer normalMap  = null;
-        Integer specularMap = null;
+        public Integer diffuseMap = null;
+        public Integer normalMap  = null;
+        public Integer specularMap = null;
     }
 
 }

@@ -63,10 +63,21 @@ public class Ball extends Entity {
             velocityX += gravity[0];
             velocityY += gravity[1];
             velocityZ += gravity[2];
+            model.getObjects().get(0).getMaterials().get(0).getMaterial().diffuse[0] = 1;
         }else{
+            model.getObjects().get(0).getMaterials().get(0).getMaterial().diffuse[0] = 0;
             //rolling code needed
+            BaseObstacle obst = colliding.get(0); //TODO calculate direction from multiple
+            float[] temp = new float[4];
+            Utils.crossProduct( temp, obst.getNormal(this), gravity );
+            //Utils.crossProduct( temp, temp, obst.getNormal(this) );
+            Utils.normalize(temp);
+            Utils.scalar(.02f, temp);
 
-            velocityY = 0;
+            velocityX = 0.0f;//temp[0];
+            velocityY = 0.0f;//temp[1];
+            velocityZ = 0.002f;//temp[2];
+
         }
 
         location.move(velocityX,velocityY,velocityZ);
