@@ -44,6 +44,37 @@ public class Utils {
         return scalar(1/magnitude(v), v );
     }
 
+    public static float[] subv(Location location, float[] intersection) {
+        float[] out = new float[intersection.length];
+        out[0] = location.getX() - intersection[0];
+        out[1] = location.getY() - intersection[1];
+        out[2] = location.getZ() - intersection[2];
+        if(out.length>=4)
+            out[3] = 1;
+        return out;
+    }
+    public static float[] subv( float[] intersection, Location location) {
+        float[] out = new float[intersection.length];
+        out[0] = intersection[0] - location.getX();
+        out[1] = intersection[1] - location.getY();
+        out[2] = intersection[2] - location.getZ();
+        if(out.length>=4)
+            out[3] = 1;
+        return out;
+    }
+    public static float[] sub( float result[], float[] a, float b[]){
+        for(int i = 0; i<result.length; i++){
+            result[i] = a[i]-b[i];
+        }
+        return result;
+    }
+    public static float[] add( float[] result, float[] a, float[] b){
+        for(int i = 0; i<result.length; i++){
+            result[i] = a[i]+b[i];
+        }
+        return result;
+    }
+
     //https://www.arduino.cc/reference/en/language/functions/math/map/
     float map(float x, float in_min, float in_max, float out_min, float out_max) {
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
@@ -291,34 +322,46 @@ public class Utils {
         public static float[] nearestPointToPlane(Location objCenter, Location pointOnPlane, float normX, float normY, float normZ) {
             return nearestPointToPlane(objCenter, pointOnPlane, new float[] {normX, normY, normZ});
         }
-        public static float[] nearestPointToPlane(Location objCenter, Location pointOnPlane, float[] norm){
-            //could also be implented by vector projection if translated
 
-            float[] transform = new float[16];
-            float[] pos = Utils.clone(norm);
-            Matrix.setIdentityM(transform, 0);
 
-            float rotXY = (float)Math.toDegrees(Math.atan2(pos[1], pos[0])); //y,x
-            Matrix.rotateM(transform, 0, -rotXY+90, 0, 0, 1); //rotate about z axis
 
-            Matrix.multiplyMV(pos, 0, transform, 0, pos, 0);
+        public static float[] nearestPointToPlane(Location objCenter, Location planeOrigin, float[] norm){
+            //https://stackoverflow.com/questions/9605556/how-to-project-a-point-onto-a-plane-in-3d
 
-            float rotZY = (float) Math.toDegrees(Math.atan2(pos[1], pos[2])); //y,x
-            Matrix.rotateM(transform, 0, -rotZY+90, 1, 0, 0); //rotate about x axis
-            //normal is now facing up if original is mulitiplied with transform
-
-            objCenter.putPos(pos);
-            Matrix.multiplyMV(pos, 0, transform, 0, pos, 0);
-            float[] planePos = new float[]{ pointOnPlane.getX(), pointOnPlane.getY(), pointOnPlane.getZ(), 1};
-            Matrix.multiplyMV(planePos, 0, transform, 0, planePos, 0);
-            pos[1] = planePos[1]; //drop/raise point onto plane
-
-            Matrix.setIdentityM(transform, 0);
-            Matrix.rotateM(transform, 0, rotZY, 1, 0, 0);
-            Matrix.rotateM(transform, 0, rotXY, 0, 0, 1);
-            Matrix.multiplyMV(pos, 0, transform, 0, pos, 0);
-            return pos;
-            //TODO unit test this
+            float[] v = new float[]{
+                    objCenter.getX() - planeOrigin.getX(),
+                    objCenter.getY() - planeOrigin.getY(),
+                    objCenter.getZ() - planeOrigin.getZ(),
+            };
+            float dist = dotProduct(v, norm);
+            float[] projected = subv(planeOrigin, scalar(dist, norm));
+            return projected;
+//
+//            float[] transform = new float[16];
+//            float[] pos = Utils.clone(norm);
+//            Matrix.setIdentityM(transform, 0);
+//
+//            float rotXY = (float)Math.toDegrees(Math.atan2(pos[1], pos[0])); //y,x
+//            Matrix.rotateM(transform, 0, -rotXY+90, 0, 0, 1); //rotate about z axis
+//
+//            Matrix.multiplyMV(pos, 0, transform, 0, pos, 0);
+//
+//            float rotZY = (float) Math.toDegrees(Math.atan2(pos[1], pos[2])); //y,x
+//            Matrix.rotateM(transform, 0, -rotZY+90, 1, 0, 0); //rotate about x axis
+//            //normal is now facing up if original is mulitiplied with transform
+//
+//            objCenter.putPos(pos);
+//            Matrix.multiplyMV(pos, 0, transform, 0, pos, 0);
+//            float[] planePos = new float[]{ pointOnPlane.getX(), pointOnPlane.getY(), pointOnPlane.getZ(), 1};
+//            Matrix.multiplyMV(planePos, 0, transform, 0, planePos, 0);
+//            pos[1] = planePos[1]; //drop/raise point onto plane
+//
+//            Matrix.setIdentityM(transform, 0);
+//            Matrix.rotateM(transform, 0, rotZY, 1, 0, 0);
+//            Matrix.rotateM(transform, 0, rotXY, 0, 0, 1);
+//            Matrix.multiplyMV(pos, 0, transform, 0, pos, 0);
+//            return pos;
+//            //TODO unit test this
         }
     }
 }

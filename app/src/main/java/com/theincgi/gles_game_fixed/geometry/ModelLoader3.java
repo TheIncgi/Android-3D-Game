@@ -202,7 +202,7 @@ public class ModelLoader3 {
            // program.trySetVertexAttribArray("normal", nCoords);
             if(tCoords!=null)
                 program.trySetVertexAttribArray("uv", tCoords);
-            program.trySetMatrix("modelMatrix", at.getMatrix());
+            program.trySetMatrix("modelMatrix", Utils.matrixStack.get());
 
 
         }

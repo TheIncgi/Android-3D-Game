@@ -4,10 +4,13 @@ import com.theincgi.gles_game_fixed.game.entity.Entity;
 import com.theincgi.gles_game_fixed.geometry.ModelLoader3;
 import com.theincgi.gles_game_fixed.render.Camera;
 import com.theincgi.gles_game_fixed.utils.Location;
+import com.theincgi.gles_game_fixed.utils.Utils;
 
 public class BaseObstacle implements ModelLoader3.DrawableModel{
     ModelLoader3.Model model;
     protected Location location;
+    private static int obstID = 0;
+    public static final int OBST_ID = obstID++;
     protected float[] normal = {0,1,0,  1};
     public BaseObstacle() {
         location = new Location(0,0,0);
@@ -16,10 +19,15 @@ public class BaseObstacle implements ModelLoader3.DrawableModel{
         location = new Location(x,y,z);
     }
 
-    public boolean intersectsSurface( Entity e ){
-        return false;
+    public float[] intersectsSurface( Entity e ){
+        return null;
     }
 
+    public boolean pointOver(Location l){
+        return Utils.inRange(l.getX(), this.location.getX()-1,this.location.getX()+1)&&
+                Utils.inRange(l.getZ(), this.location.getZ()-1, this.location.getZ()+1) &&
+                Utils.inRange(l.getY(), 0, 1);
+    }
     @Override
     public void draw(float[] mvpm, Camera camera) {
         model.drawAll(mvpm, location);

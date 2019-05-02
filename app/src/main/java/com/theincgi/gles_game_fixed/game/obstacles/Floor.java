@@ -1,8 +1,13 @@
 package com.theincgi.gles_game_fixed.game.obstacles;
 
 import android.opengl.Matrix;
+import android.util.Log;
 
+import com.theincgi.gles_game_fixed.R;
 import com.theincgi.gles_game_fixed.game.entities.Ball;
+import com.theincgi.gles_game_fixed.game.entities.BasicBall;
+import com.theincgi.gles_game_fixed.game.entities.ISphere;
+import com.theincgi.gles_game_fixed.game.entities.RigidBodyBall;
 import com.theincgi.gles_game_fixed.game.entity.Entity;
 import com.theincgi.gles_game_fixed.geometry.ModelLoader3;
 import com.theincgi.gles_game_fixed.render.Camera;
@@ -21,16 +26,20 @@ public class Floor extends BaseObstacle{
         //Matrix.setIdentityM(transform, 0);
     }
 
+
     @Override
-    public boolean intersectsSurface( Entity e ) {
+    public float[] intersectsSurface( Entity e ) {
         Location l = e.getLocation();
-        if(e instanceof Ball) {
-            Ball ball = ((Ball) e);
+        if(e instanceof BasicBall){
+
+        }
+        if(e instanceof RigidBodyBall) {
+            RigidBodyBall ball = ((RigidBodyBall) e);
 //            if (Utils.inRange(location.getY(), l.getY() - ball.getRadius(), l.getY() + ball.getRadius())){
 //                return true;
 //            }
             float[] near = Utils.CollisionTests.nearestPointToPlane(e.getLocation(), location, normal);
-            return Utils.CollisionTests.sphereContains(near, e.getLocation(), ball.getRadius()) ||
+            if(Utils.CollisionTests.sphereContains(near, e.getLocation(), ball.getRadius()) ||
                    Utils.CollisionTests.sphereContains(
                            near,
                        e.getLocation().getX() + e.getVelocityX(),
@@ -38,9 +47,10 @@ public class Floor extends BaseObstacle{
                         e.getLocation().getZ() + e.getVelocityZ(),
                            ball.getRadius()) ||
                     Utils.CollisionTests.cylinderContains(near, e.getLocation(), ball.getRadius(),
-                            e.getVelocityX(), e.getVelocityY(), e.getVelocityZ());
+                            e.getVelocityX(), e.getVelocityY(), e.getVelocityZ()))
+            return near;
         }
-        return false;
+        return null;
     }
 
 

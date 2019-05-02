@@ -5,5 +5,5 @@ import com.theincgi.gles_game_fixed.game.Engine;
 public abstract class Level {
 
     abstract public void load();
-
+    abstract public void onTick();
 }

@@ -12,7 +12,7 @@ import com.theincgi.gles_game_fixed.utils.Utils;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class Ball extends Entity {
+public class Ball extends Entity implements ISphere{
     float radius = 1;
     //used so rotation can accumulate instead of using just plain yawPitchRoll
     float[] rotationMatrix = new float[16];
@@ -22,28 +22,36 @@ public class Ball extends Entity {
         Matrix.setIdentityM(rotationMatrix,0);
     }
 
+
+    private ArrayList<float[]> forces = new ArrayList<>();
     @Override
     public void onTick(Engine e, long time) {
         float[] gravity = Engine.instance().gravity;
-
+        boolean bounce = false;
         ArrayList<BaseObstacle> colliding = new ArrayList();
         Iterator<BaseObstacle> iterator = e.getObstacleItterator();
         float[] avgReflect = new float[4]; avgReflect[3] = 1;
+        forces.clear();
         while(iterator.hasNext()){
             BaseObstacle obst = iterator.next();
-            boolean intersects = obst.intersectsSurface( this );
-            if( intersects ) {
+            float[] intersection = obst.intersectsSurface( this );
+            if( intersection != null ) {
                 colliding.add(obst);
-                float[] reflection = Utils.reflect(new float[]{velocityX, velocityY, velocityZ}, obst.getNormal(this));
+                forces.add( Utils.normalize(Utils.subv(location, intersection)) );
+                float[] normal = obst.getNormal(this);
+                float[] reflection = Utils.reflect(new float[]{velocityX, velocityY, velocityZ}, normal);
                 for(int i = 0; i<3; i++)
                     avgReflect[i] += reflection[i];  //TODO handle reversed normals
+
+                bounce |= .3 < Utils.dotProduct(velocityX, velocityY, velocityZ, normal[0], normal[1], normal[2]);
             }
+
         }
         Utils.scalar(1f/colliding.size(), avgReflect);
         float speed = Utils.distance(0,0,0,velocityX, velocityY,velocityZ);
         if(colliding.size()>0){
 
-            if(speed > Utils.magnitude(gravity)){
+            if(bounce && speed/2 > Utils.magnitude(gravity)){
                 //TODO bounce ball in reflection angles
                 //TODO move ball to height based on 'progress' passing past intersecting point
                 Utils.scalar(speed * .33f, avgReflect);
@@ -52,33 +60,64 @@ public class Ball extends Entity {
                 velocityZ = avgReflect[2];
 
                 onGround = false;
+                model.getObjects().get(0).getMaterials().get(0).getMaterial().diffuse[0] = 1;
+                model.getObjects().get(0).getMaterials().get(0).getMaterial().diffuse[1] = 1;
 
             }else{
                 onGround = true;
+                model.getObjects().get(0).getMaterials().get(0).getMaterial().diffuse[0] = 0;
+                model.getObjects().get(0).getMaterials().get(0).getMaterial().diffuse[1] = 1;
+                //TODO calculate forces
+                float[] totalForce = new float[]{gravity[0],gravity[1],gravity[2],1};
+                for(float[] fDir : forces){
+                    float fact = Utils.dotProduct(fDir[0],fDir[1],fDir[2], gravity[0],gravity[1],gravity[2]);
+                    fDir = Utils.scalar(fact, fDir);
+//                    totalForce[0] += fDir[0];
+                   // totalForce[1] += fDir[2];
+//                    totalForce[2] += fDir[2];
+
+                }
+                totalForce = Utils.normalize(totalForce);
+                float[] g = Utils.normalize(gravity.clone());
+                totalForce[0] += g[0];
+                totalForce[1] += g[1];
+                totalForce[2] += g[2];
+                velocityX =  totalForce[0];
+               // velocityY =  totalForce[1];
+                velocityY =  totalForce[2];
+
             }
         }else{
             onGround = false;
-        }
-        if(!onGround){
+            model.getObjects().get(0).getMaterials().get(0).getMaterial().diffuse[0] = 1;
+            model.getObjects().get(0).getMaterials().get(0).getMaterial().diffuse[1] = 0;
             velocityX += gravity[0];
             velocityY += gravity[1];
             velocityZ += gravity[2];
-            model.getObjects().get(0).getMaterials().get(0).getMaterial().diffuse[0] = 1;
-        }else{
-            model.getObjects().get(0).getMaterials().get(0).getMaterial().diffuse[0] = 0;
-            //rolling code needed
-            BaseObstacle obst = colliding.get(0); //TODO calculate direction from multiple
-            float[] temp = new float[4];
-            Utils.crossProduct( temp, obst.getNormal(this), gravity );
-            //Utils.crossProduct( temp, temp, obst.getNormal(this) );
-            Utils.normalize(temp);
-            Utils.scalar(.02f, temp);
-
-            velocityX = 0.0f;//temp[0];
-            velocityY = 0.0f;//temp[1];
-            velocityZ = 0.002f;//temp[2];
-
         }
+
+
+
+//        if(!onGround){
+//            velocityX += gravity[0];
+//            velocityY += gravity[1];
+//            velocityZ += gravity[2];
+//        }else{
+//
+//
+////            //rolling code needed
+////            BaseObstacle obst = colliding.get(0); //TODO calculate direction from multiple
+////            float[] temp = new float[4];
+////            Utils.crossProduct( temp, obst.getNormal(this), gravity );
+////            //Utils.crossProduct( temp, temp, obst.getNormal(this) );
+////            Utils.normalize(temp);
+////            Utils.scalar(.02f, temp);
+//////
+//////            velocityX = 0.0f;//temp[0];
+//////            velocityY = 0.0f;//temp[1];
+//////            velocityZ = 0.002f;//temp[2];
+//
+//        }
 
         location.move(velocityX,velocityY,velocityZ);
         if(velocityX != 0 || velocityZ != 0) {

@@ -13,6 +13,7 @@ import com.theincgi.gles_game_fixed.game.Engine;
 import com.theincgi.gles_game_fixed.game.entities.Ball;
 import com.theincgi.gles_game_fixed.game.levels.Level;
 import com.theincgi.gles_game_fixed.game.levels.TestLevel;
+import com.theincgi.gles_game_fixed.game.levels.TestLevel2;
 import com.theincgi.gles_game_fixed.game.obstacles.AngledFloor;
 import com.theincgi.gles_game_fixed.game.obstacles.Floor;
 import com.theincgi.gles_game_fixed.geometry.MaterialManager;
@@ -43,7 +44,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
     Camera camera;
     Location origin = new Location();
 
-    Level level = new TestLevel();
+
 
     private Queue<Task> tasks = new LinkedList<>();
     private LinkedList<IRenderable> renderables = new LinkedList<>();
@@ -53,8 +54,10 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
         camera = new Camera(0,-3,-3, 0, 45, 0);
         //ModelLoader2.init(context);
         Engine.init( context );
+
         ModelLoader3.init(context);
         MaterialManager.init(context);
+
 
     }
 
@@ -94,8 +97,9 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
         //cube = modelLoader.load("cube");
         //model = ModelLoader2.get("pointer");
 
-        //TODO load level with intent
-        level.load();
+
+//TODO load level with intent
+        Engine.instance().setLevel( new TestLevel2() );
 
         //model.setProgram(GLPrograms.getDefault());
 //        // make adjustments for screen ratio

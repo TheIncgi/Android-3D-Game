@@ -9,6 +9,8 @@ import android.opengl.Matrix;
 
 import com.theincgi.gles_game_fixed.game.entities.Ball;
 import com.theincgi.gles_game_fixed.game.entity.Entity;
+import com.theincgi.gles_game_fixed.game.levels.Level;
+import com.theincgi.gles_game_fixed.game.levels.TestLevel;
 import com.theincgi.gles_game_fixed.game.obstacles.BaseObstacle;
 import com.theincgi.gles_game_fixed.render.Camera;
 import com.theincgi.gles_game_fixed.render.GLProgram;
@@ -39,6 +41,7 @@ public class Engine {
     LightSource lightSource = new LightSource(0, 100, 0);
     float globalIlluminationBrightness = .3f;
     private Sensor rotationSensor;
+    public Level level;
 
     public static void init(Context context){
         INSTANCE = INSTANCE==null? new Engine( context ) : INSTANCE;
@@ -54,7 +57,7 @@ public class Engine {
                 1_000_000/Engine.ticksPerSecond());
     }
 
-    private static int ticksPerSecond() {
+    public static int ticksPerSecond() {
         return 20;
     }
 
@@ -62,7 +65,7 @@ public class Engine {
         @Override
         public void onSensorChanged(SensorEvent event) {
             if(event.sensor .equals( rotationSensor )) {
-                gravity = Utils.scalar(-0.05f, Utils.normalize(event.values));
+                gravity = Utils.scalar(-0.81f, Utils.normalize(event.values));
             }
         }
 
@@ -73,6 +76,34 @@ public class Engine {
     };
     public static Engine instance() {
         return INSTANCE;
+    }
+
+    public void setLevel(Level level) {
+        this.level = level;
+        boolean wasRunning = running;
+        if(running)
+            stop();
+        synchronized (obstToAdd){
+            obstToAdd.clear();
+        }
+        synchronized (obstToRemove){
+            obstToRemove.clear();
+        }
+        synchronized (obstacales){
+            obstacales.clear();
+        }
+        synchronized (toAdd){
+            toAdd.clear();
+        }
+        synchronized (toRemove){
+            toRemove.clear();
+        }
+        synchronized (entities){
+            entities.clear();
+        }
+        level.load();
+        if(wasRunning)
+            start();
     }
 
     public void onTick() {
@@ -108,7 +139,8 @@ public class Engine {
             }
         }
 
-
+        if(level!=null)
+            level.onTick();
 
         Iterator<Entity> eIter = entities.iterator();
         while(eIter.hasNext()) {

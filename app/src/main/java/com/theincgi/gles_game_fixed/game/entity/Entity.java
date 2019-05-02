@@ -63,4 +63,7 @@ public class Entity implements ModelLoader3.DrawableModel {
         velocityX = x;
         velocityZ = z;
     }
+    public void resetVelicty(){
+        setVelocity(0,0,0);
+    }
 }
