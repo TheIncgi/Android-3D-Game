@@ -104,10 +104,10 @@ public class RigidBodyBall extends Entity implements ISphere {
 
 
     @Override
-    public void draw(float[] mvpm, Camera camera) {
+    public void draw(Camera camera) {
         Utils.matrixStack.pushMatrix();
 
-        super.draw(mvpm, camera);
+        super.draw(camera);
         Utils.matrixStack.popMatrix();
     }
 

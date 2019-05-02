@@ -11,17 +11,22 @@ import com.theincgi.gles_game_fixed.utils.Utils;
 
 import java.util.Iterator;
 
-public class BasicBall extends Entity implements ISphere{
+public class BasicBall extends Entity implements ISphere {
     float[] orient = new float[16];
-    public BasicBall(){
+
+    public BasicBall() {
         super("sphere");
         Matrix.setIdentityM(orient, 0);
-        location = new Location(){
+        location = new Location() {
             @Override
             public void applyToMatrix(float[] matrix) {
                 //FIXME rolling needs fixing
-                super.applyToMatrix(matrix);
                 //Matrix.multiplyMM(Utils.matrixStack.get(), 0, orient, 0, Utils.matrixStack.get(), 0);
+                //Matrix.multiplyMM(Utils.matrixStack.get(), 0, Utils.matrixStack.get(), 0, orient, 0);
+                Matrix.translateM(matrix, 0, getX(),getY(),getZ());
+                //Matrix.multiplyMM(matrix, 0, orient, 0, matrix, 0);
+                Matrix.multiplyMM(matrix, 0,matrix,0,orient,0);
+                //Matrix.translateM(matrix, 0, getX(), getY(), getZ());
             }
         };
     }
@@ -38,10 +43,10 @@ public class BasicBall extends Entity implements ISphere{
         velocityZ *= .9;
         velocityY += -.2f;
         Iterator<BaseObstacle> iterator = e.getObstacleItterator();
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             BaseObstacle obst = iterator.next();
             float[] near = obst.intersectsSurface(this);
-            if( obst.pointOver( location ) ){
+            if (obst.pointOver(location)) {
                 velocityY = 0;
                 break;
             }
@@ -49,17 +54,16 @@ public class BasicBall extends Entity implements ISphere{
         location.move(velocityX, velocityY, velocityZ);
 
 
-        if(velocityX != 0 || velocityZ != 0) {
-            float rollAngle = (float) Math.toDegrees(Math.atan2(-velocityZ, velocityX));
+        if (velocityX != 0 || velocityZ != 0) {
+            float rollAngle = (float) Math.toDegrees(Math.atan2(velocityZ, velocityX));
             rollAngle += 90; //axis of rotation
-            rollAngle = (float)Math.toRadians(rollAngle);
-            float ballCirc = (float)(2*Math.PI*getRadius());
-            float rollAmount = 360 * Utils.magnitude(new float[]{velocityX,velocityY,velocityZ}) / ballCirc;
-            Matrix.rotateM(orient,0, rollAmount, (float)Math.cos(rollAngle), 0, (float)Math.sin(rollAmount));
+            rollAngle = (float) Math.toRadians(rollAngle);
+            float ballCirc = (float) (2 * Math.PI * getRadius());
+            float rollAmount = 360 * Utils.magnitude(new float[]{velocityX, 0, velocityZ}) / ballCirc;
+            Matrix.rotateM(orient, 0, rollAmount, (float) Math.cos(rollAngle), 0, (float) -Math.sin(rollAmount));
         }
         //Matrix.rotateM(rotationMatrix, 0, 3, 1,0,1);
         //location.setPitch(location.getPitch()+1);
-
 
 
     }
@@ -69,11 +73,4 @@ public class BasicBall extends Entity implements ISphere{
         return 1;
     }
 
-    @Override
-    public void draw(float[] mvpm, Camera camera) {
-        Utils.matrixStack.pushMatrix();
-//
-        super.draw(mvpm, camera);
-        Utils.matrixStack.popMatrix();
-    }
 }

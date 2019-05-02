@@ -29,8 +29,8 @@ public class BaseObstacle implements ModelLoader3.DrawableModel{
                 Utils.inRange(l.getY(), 0, 1);
     }
     @Override
-    public void draw(float[] mvpm, Camera camera) {
-        model.drawAll(mvpm, location);
+    public void draw(Camera camera) {
+        model.drawAll(location);
     }
 
     public float[] getNormal( Entity e ){

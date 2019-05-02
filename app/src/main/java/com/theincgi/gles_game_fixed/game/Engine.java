@@ -35,7 +35,7 @@ public class Engine {
     private boolean running = false;
     ScheduledFuture sortTimer;
     private static float[] defaultGravity = {0,-.05f, 0};
-    public float[] gravity;
+    public float[] gravity = new float[3];
     LinkedList<BaseObstacle> obstToAdd = new LinkedList(), obstToRemove = new LinkedList();
 
     LightSource lightSource = new LightSource(0, 100, 0);
@@ -65,7 +65,10 @@ public class Engine {
         @Override
         public void onSensorChanged(SensorEvent event) {
             if(event.sensor .equals( rotationSensor )) {
-                gravity = Utils.scalar(-0.81f, Utils.normalize(event.values));
+                float[] temp = Utils.scalar(-0.81f, Utils.normalize(event.values));
+                gravity[0] = temp[1];
+                gravity[1] = temp[0];
+                gravity[2] = temp[2];
             }
         }
 
@@ -223,12 +226,12 @@ public class Engine {
         }
         synchronized (entities){
             for(Entity e : entities){
-                e.draw(mvpm, camera);
+                e.draw(camera);
             }
         }
         synchronized (obstacales){
             for(BaseObstacle o : obstacales){
-                o.draw(mvpm, camera);
+                o.draw(camera);
             }
         }
     }

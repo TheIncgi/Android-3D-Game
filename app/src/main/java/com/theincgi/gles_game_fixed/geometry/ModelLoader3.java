@@ -179,21 +179,21 @@ public class ModelLoader3 {
         MaterialManager.MaterialLib materialLib;
         FloatBuffer vCoords, tCoords, nCoords;
 
-        public void drawAll(float[] mvpm, Location at){
-            setup(mvpm, at);
+        public void drawAll(Location at){
+            setup(at);
             for (int i = 0; i < objects.size(); i++) {
-                _drawObj(mvpm, i);
+                _drawObj(i);
                 GLErrorLogger.check();
             }
             cleanup();
         }
-        public void drawObj(float[] mvpm, Location at, int objNum){
-            setup(mvpm, at);
-            _drawObj(mvpm, objNum);
+        public void drawObj(Location at, int objNum){
+            setup(at);
+            _drawObj(objNum);
             cleanup();
         }
 
-        private void setup(float[] mvpm, Location at){
+        private void setup(Location at){
             program.use();
             Utils.matrixStack.pushMatrix();
             at.applyToStack();
@@ -202,8 +202,8 @@ public class ModelLoader3 {
            // program.trySetVertexAttribArray("normal", nCoords);
             if(tCoords!=null)
                 program.trySetVertexAttribArray("uv", tCoords);
-            program.trySetMatrix("modelMatrix", Utils.matrixStack.get());
 
+            program.trySetMatrix("modelMatrix", Utils.matrixStack.get());
 
         }
 
@@ -214,11 +214,11 @@ public class ModelLoader3 {
             Utils.matrixStack.popMatrix();
         }
 
-        private void _drawObj(float[] mvpm, int objNum){
-            Utils.matrixStack.pushMatrix();
-            objects.get(objNum).draw(mvpm, program);
+        private void _drawObj(int objNum){
+            //Utils.matrixStack.pushMatrix();
+            objects.get(objNum).draw(program);
             GLErrorLogger.check();
-            Utils.matrixStack.popMatrix();
+            //Utils.matrixStack.popMatrix();
         }
         public int numObjs() {
             return objects.size();
@@ -233,7 +233,7 @@ public class ModelLoader3 {
         ArrayList<MaterialGroup> materials = new ArrayList<>();
         String name;
 
-        public void draw(float[] mvpm, GLProgram program){
+        public void draw(GLProgram program){
 
             //GLES20.glUniformMatrix4fv(modelH, 1, false, model,0 );
             GLErrorLogger.check();
@@ -270,6 +270,6 @@ public class ModelLoader3 {
         }
     }
     public interface DrawableModel {
-        public void draw(float[] mvpm, Camera camera);
+        public void draw(Camera camera);
     }
 }

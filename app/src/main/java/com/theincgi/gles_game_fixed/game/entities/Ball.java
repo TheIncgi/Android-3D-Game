@@ -138,11 +138,11 @@ public class Ball extends Entity implements ISphere{
     }
 
     @Override
-    public void draw(float[] mvpm, Camera camera) {
+    public void draw(Camera camera) {
         Utils.matrixStack.pushMatrix();
         //Matrix.multiplyMM(Utils.matrixStack.get(), 0, Utils.matrixStack.get(), 0, rotationMatrix, 0);
         Matrix.rotateM(Utils.matrixStack.get(), 0, 45, 1,1,1);
-        super.draw(mvpm, camera);
+        super.draw(camera);
         Utils.matrixStack.popMatrix();
     }
 }

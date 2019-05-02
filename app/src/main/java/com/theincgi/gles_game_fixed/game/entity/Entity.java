@@ -42,8 +42,8 @@ public class Entity implements ModelLoader3.DrawableModel {
     }
 
     @Override
-    public void draw(float[] mvpm, Camera camera) {
-        model.drawAll(mvpm, location);
+    public void draw(Camera camera) {
+        model.drawAll(location);
     }
 
     public float getVelocityX() {
