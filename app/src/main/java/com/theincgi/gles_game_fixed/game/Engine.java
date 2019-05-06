@@ -35,7 +35,7 @@ public class Engine {
     private boolean running = false;
     ScheduledFuture sortTimer;
     private static float[] defaultGravity = {0,-.05f, 0};
-    public float[] gravity = new float[3];
+    public float[] gravity = new float[4];
     LinkedList<BaseObstacle> obstToAdd = new LinkedList(), obstToRemove = new LinkedList();
 
     LightSource lightSource = new LightSource(0, 100, 0);
@@ -61,14 +61,23 @@ public class Engine {
         return 20;
     }
 
+    private static float[] graviRot = new float[16];
+    static{
+        Matrix.setIdentityM(graviRot,0);
+        Matrix.rotateM(graviRot, 0, 90, 0, 0, 1);
+        Matrix.rotateM(graviRot, 0, 45, 0, 1, 0);
+        Matrix.scaleM(graviRot, 0, 8,8,8);
+    }
     private SensorEventListener onSensorEvent = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
             if(event.sensor .equals( rotationSensor )) {
                 float[] temp = Utils.scalar(-0.81f, Utils.normalize(event.values));
-                gravity[0] = temp[1];
-                gravity[1] = temp[0];
+                gravity[0] = temp[0];
+                gravity[1] = temp[1];
                 gravity[2] = temp[2];
+                gravity[3] = 1;
+                Matrix.multiplyMV(gravity, 0, graviRot,0, gravity, 0);
             }
         }
 

@@ -7,6 +7,8 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -26,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
+        //public static final int FLAG_KEEP_SCREEN_ON = 0x00000080
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         boolean useXML = false;
         if( useXML ) {
             setContentView(R.layout.activity_main);
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
             glSurfaceView.setDrawWhenDirty(false);
             setContentView(glSurfaceView);
         }
+
 
         //Engine.instance().start();
 

@@ -8,7 +8,7 @@ public class TestLevel2 extends Level{
     BasicBall theBall = new BasicBall();
     @Override
     public void load() {
-        int r = 1;
+        int r = 5; //emulator cant handel higher numbers without gpu accel
         Engine.instance().addEntity(theBall);
         theBall.getLocation().setPos(0,3,0);
         for(int i = -r; i<=r; i++){
