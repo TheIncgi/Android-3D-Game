@@ -65,6 +65,20 @@ public class Engine {
                     onSensorEvent,
                     rotationSensor,
                     1_000_000/Engine.ticksPerSecond());
+        } else if(sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) != null){
+            Toast.makeText(context, "ROTATION_VECTOR AVAILABLE", Toast.LENGTH_SHORT).show();
+            rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+            sensorManager.registerListener(
+                    onSensorEvent,
+                    rotationSensor,
+                    1_000_000/Engine.ticksPerSecond());
+        } else if(sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null){
+            Toast.makeText(context, "ACCELEROMETER AVAILABLE", Toast.LENGTH_SHORT).show();
+            rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            sensorManager.registerListener(
+                    onSensorEvent,
+                    rotationSensor,
+                    1_000_000/Engine.ticksPerSecond());
         }else{
             Toast.makeText(context, "Failure! No useable sensors", Toast.LENGTH_SHORT).show();
         }
