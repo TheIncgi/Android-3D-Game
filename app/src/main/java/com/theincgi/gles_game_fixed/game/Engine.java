@@ -6,6 +6,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.opengl.Matrix;
+import android.widget.Toast;
 
 import com.theincgi.gles_game_fixed.game.entities.Ball;
 import com.theincgi.gles_game_fixed.game.entity.Entity;
@@ -50,6 +51,13 @@ public class Engine {
 
     private Engine(Context context){
         SensorManager sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) != null) {
+            Toast.makeText(context, "Gravity AVAILABLE", Toast.LENGTH_SHORT).show();
+        } else {
+            // Failure! No Gravity Sensor.
+            Toast.makeText(context, "Failure! No Gravity Sensor", Toast.LENGTH_SHORT).show();
+        }
+
         rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
         sensorManager.registerListener(
                 onSensorEvent,

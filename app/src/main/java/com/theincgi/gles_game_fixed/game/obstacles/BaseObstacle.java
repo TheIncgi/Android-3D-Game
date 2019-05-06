@@ -40,4 +40,5 @@ public class BaseObstacle implements ModelLoader3.DrawableModel{
     public float yLimit(){
         return location.getY();
     }
+
 }
