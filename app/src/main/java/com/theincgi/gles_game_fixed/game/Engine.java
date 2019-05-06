@@ -53,16 +53,23 @@ public class Engine {
         SensorManager sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         if (sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) != null) {
             Toast.makeText(context, "Gravity AVAILABLE", Toast.LENGTH_SHORT).show();
-        } else {
-            // Failure! No Gravity Sensor.
-            Toast.makeText(context, "Failure! No Gravity Sensor", Toast.LENGTH_SHORT).show();
+            rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+            sensorManager.registerListener(
+                    onSensorEvent,
+                    rotationSensor,
+                    1_000_000/Engine.ticksPerSecond());
+        } else if(sensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR) != null){
+            Toast.makeText(context, "GAME_ROTATION_VECTOR AVAILABLE", Toast.LENGTH_SHORT).show();
+            rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
+            sensorManager.registerListener(
+                    onSensorEvent,
+                    rotationSensor,
+                    1_000_000/Engine.ticksPerSecond());
+        }else{
+            Toast.makeText(context, "Failure! No useable sensors", Toast.LENGTH_SHORT).show();
         }
 
-        rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
-        sensorManager.registerListener(
-                onSensorEvent,
-                rotationSensor,
-                1_000_000/Engine.ticksPerSecond());
+
     }
 
     public static int ticksPerSecond() {
