@@ -2,6 +2,7 @@ package com.theincgi.gles_game_fixed.render;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
@@ -52,13 +53,12 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
     public CustomGLSurfaceViewRenderer(Context context) {
         this.context = context;
         camera = new Camera(0,-3,-3, 0, 45, 0);
+
         //ModelLoader2.init(context);
         Engine.init( context );
-
+        Engine.instance().setCamera(camera);
         ModelLoader3.init(context);
         MaterialManager.init(context);
-
-
     }
 
     //Triangle triangle;

@@ -13,7 +13,7 @@ public class Camera {
         this(0,0,0);
     }
     public Camera(float x, float y, float z) {
-        this(x, y, z, 0, 0,0 );
+        this(x, y, z, 0, -45, 0 );
     }
     public Camera(float x, float y, float z, float yaw, float pitch, float roll) {
         location = new Location(x, y, z, yaw, pitch, roll);
@@ -35,5 +35,9 @@ public class Camera {
     public float[] getPos() {
         location.putPos( pos );
         return pos;
+    }
+
+    public Location getLocation() {
+        return location;
     }
 }

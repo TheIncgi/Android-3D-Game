@@ -9,6 +9,7 @@ import android.opengl.Matrix;
 import android.widget.Toast;
 
 import com.theincgi.gles_game_fixed.game.entities.Ball;
+import com.theincgi.gles_game_fixed.game.entities.BasicBall;
 import com.theincgi.gles_game_fixed.game.entity.Entity;
 import com.theincgi.gles_game_fixed.game.levels.Level;
 import com.theincgi.gles_game_fixed.game.levels.TestLevel;
@@ -43,6 +44,9 @@ public class Engine {
     float globalIlluminationBrightness = .3f;
     private Sensor rotationSensor;
     public Level level;
+    private Camera camera;
+
+    BasicBall theBall;
 
     public static void init(Context context){
         INSTANCE = INSTANCE==null? new Engine( context ) : INSTANCE;
@@ -92,10 +96,7 @@ public class Engine {
 
     private static float[] graviRot = new float[16];
     static{
-        Matrix.setIdentityM(graviRot,0);
-        Matrix.rotateM(graviRot, 0, 90, 0, 0, 1);
-        Matrix.rotateM(graviRot, 0, 45, 0, 1, 0);
-        Matrix.scaleM(graviRot, 0, 8,8,8);
+
     }
     private SensorEventListener onSensorEvent = new SensorEventListener() {
         @Override
@@ -106,7 +107,20 @@ public class Engine {
                 gravity[1] = temp[1];
                 gravity[2] = temp[2];
                 gravity[3] = 1;
+
+                Matrix.setIdentityM(graviRot,0);
+                Matrix.rotateM(graviRot, 0, 90, 0, 0, 1);
+
+
+
+                Matrix.rotateM(graviRot, 0, 45, 0, 1, 0);
+
+               // Matrix.rotateM(graviRot, 0, camera.getLocation().getYaw(), 0,  0, 1);
+                Matrix.scaleM(graviRot, 0, 8,8,8);
+
                 Matrix.multiplyMV(gravity, 0, graviRot,0, gravity, 0);
+
+
             }
         }
 
@@ -194,6 +208,11 @@ public class Engine {
             }
             e.onTick( this, time );
         }
+        camera.getLocation().setPos(
+              0,//  theBall.getLocation().getX(),
+                -2,//
+             0//   theBall.getLocation().getZ() + 4
+        );
     }
 
     public Iterator<BaseObstacle> getObstacleItterator(){
@@ -272,5 +291,17 @@ public class Engine {
                 o.draw(camera);
             }
         }
+    }
+
+    public void setCamera(Camera camera) {
+        this.camera = camera;
+    }
+
+    public Camera getCamera() {
+        return camera;
+    }
+
+    public void setTheBall(BasicBall theBall) {
+        this.theBall = theBall;
     }
 }
