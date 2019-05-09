@@ -45,14 +45,15 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
     private float far  = 100f;
     Camera camera;
     Location origin = new Location();
-
+    Level.MakeLevel makeLevel;
 
 
     private Queue<Task> tasks = new LinkedList<>();
     private LinkedList<IRenderable> renderables = new LinkedList<>();
 
-    public CustomGLSurfaceViewRenderer(Context context) {
+    public CustomGLSurfaceViewRenderer(Context context, Level.MakeLevel makeLevel) {
         this.context = context;
+        this.makeLevel = makeLevel;
         camera = new Camera(0,-3,-3, 0, 45, 0);
 
         //ModelLoader2.init(context);
@@ -93,22 +94,13 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
         float aspect = width/(float)height;
         Matrix.perspectiveM(projectionMatrix, 0, fov, aspect, near, far);
         Matrix.translateM(projectionMatrix, 0, 0,0,0);
-        //triangle = new Triangle();
-        //square   = new Square();
-        //cube = modelLoader.load("cube");
-        //model = ModelLoader2.get("pointer");
-
 
 //TODO load level with intent
-        Engine.instance().setLevel( new Level1());
+        Engine.instance().setLevel( makeLevel.make() );
 
-        //model.setProgram(GLPrograms.getDefault());
-//        // make adjustments for screen ratio
-//        float ratio = (float) width / height;
-//        gl.glMatrixMode(GL10.GL_PROJECTION);        // set matrix to projection mode
-//        gl.glLoadIdentity();                        // reset the matrix to its default state
-//        gl.glFrustumf(-ratio, ratio, -1, 1, 3, 7);  // apply the projection matrix
     }
+
+
 
     @Override
     public void onDrawFrame(GL10 gl) {

@@ -14,6 +14,10 @@ import android.widget.Toast;
 
 import com.theincgi.gles_game_fixed.game.Engine;
 import com.theincgi.gles_game_fixed.game.entities.Ball;
+import com.theincgi.gles_game_fixed.game.levels.Level;
+import com.theincgi.gles_game_fixed.game.levels.Level1;
+import com.theincgi.gles_game_fixed.game.levels.Level2;
+import com.theincgi.gles_game_fixed.game.levels.TestLevel2;
 import com.theincgi.gles_game_fixed.render.CustomGLSurfaceView;
 import com.theincgi.gles_game_fixed.render.CustomGLSurfaceViewRenderer;
 
@@ -24,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     CustomGLSurfaceViewRenderer glSurfaceViewRenderer;
     FrameLayout frameLayout;
 
+    public static final String LEVEL_KEY = "LEVEL";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +36,25 @@ public class MainActivity extends AppCompatActivity {
         //public static final int FLAG_KEEP_SCREEN_ON = 0x00000080
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         boolean useXML = false;
+
+        getIntent().getStringExtra(LEVEL_KEY);
+        Level.MakeLevel levelMake = new Level.MakeLevel() {
+            @Override
+            public Level make() {
+                switch(getIntent().getIntExtra(LEVEL_KEY, 2)){
+                    case 1:
+                        return new Level1(MainActivity.this);
+                    case 2:
+                        return new Level2( MainActivity.this);
+                }
+                return new TestLevel2(MainActivity.this);
+            }
+        };
+
+        glSurfaceViewRenderer = new CustomGLSurfaceViewRenderer(this, levelMake);
+
+
+
         if( useXML ) {
             setContentView(R.layout.activity_main);
 
@@ -41,14 +65,14 @@ public class MainActivity extends AppCompatActivity {
             if (glSurfaceView == null)
                 throw new NullPointerException("could not load gl surface view!");
 
-            glSurfaceView.init(glSurfaceViewRenderer = new CustomGLSurfaceViewRenderer(this));
+            glSurfaceView.init(glSurfaceViewRenderer);
             glSurfaceView.setRenderer(glSurfaceViewRenderer);
             glSurfaceView.setDrawWhenDirty(false);
 
 
         }else {
             glSurfaceView = new CustomGLSurfaceView(this);
-            glSurfaceView.init( glSurfaceViewRenderer = new CustomGLSurfaceViewRenderer(this));
+            glSurfaceView.init( glSurfaceViewRenderer );
             glSurfaceView.setRenderer(glSurfaceViewRenderer);
             glSurfaceView.setDrawWhenDirty(false);
             setContentView(glSurfaceView);
@@ -58,4 +82,7 @@ public class MainActivity extends AppCompatActivity {
         //Engine.instance().start();
 
     }
+
+
+
 }

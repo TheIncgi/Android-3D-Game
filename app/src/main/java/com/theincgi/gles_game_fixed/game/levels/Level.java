@@ -15,4 +15,9 @@ public abstract class Level {
     public float getTime(){
         return ticks/(float)Engine.ticksPerSecond();
     }
+
+
+    public interface MakeLevel{
+        public Level make();
+    }
 }
