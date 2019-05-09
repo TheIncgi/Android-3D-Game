@@ -26,7 +26,7 @@ public class BaseObstacle implements ModelLoader3.DrawableModel{
     public boolean pointOver(Location l){
         return Utils.inRange(l.getX(), this.location.getX()-1,this.location.getX()+1)&&
                 Utils.inRange(l.getZ(), this.location.getZ()-1, this.location.getZ()+1) &&
-                Utils.inRange(l.getY(), 0, 1);
+                Utils.inRange(l.getY(), 0, 1.5f);
     }
     @Override
     public void draw(Camera camera) {
@@ -37,8 +37,11 @@ public class BaseObstacle implements ModelLoader3.DrawableModel{
         return normal;
     }
 
-    public float yOffset(){
-        return location.getY();
+    public float yOffset(Location location){
+        return this.location.getY();
+    }
+    public float[] force(Location l){
+        return new float[] {0,0,0,1};
     }
 
 }

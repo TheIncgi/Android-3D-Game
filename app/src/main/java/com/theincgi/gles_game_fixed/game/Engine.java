@@ -208,11 +208,11 @@ public class Engine {
             }
             e.onTick( this, time );
         }
-        camera.getLocation().setPos(
-              0,//  theBall.getLocation().getX(),
-                -2,//
-             0//   theBall.getLocation().getZ() + 4
-        );
+//        camera.getLocation().setPos(
+//              0,//  theBall.getLocation().getX(),
+//                -2,//
+//             0//   theBall.getLocation().getZ() + 4
+//        );
     }
 
     public Iterator<BaseObstacle> getObstacleItterator(){

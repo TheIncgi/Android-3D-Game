@@ -13,6 +13,7 @@ import android.util.Log;
 import com.theincgi.gles_game_fixed.game.Engine;
 import com.theincgi.gles_game_fixed.game.entities.Ball;
 import com.theincgi.gles_game_fixed.game.levels.Level;
+import com.theincgi.gles_game_fixed.game.levels.Level1;
 import com.theincgi.gles_game_fixed.game.levels.TestLevel;
 import com.theincgi.gles_game_fixed.game.levels.TestLevel2;
 import com.theincgi.gles_game_fixed.game.obstacles.AngledFloor;
@@ -99,7 +100,7 @@ public class CustomGLSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
 
 //TODO load level with intent
-        Engine.instance().setLevel( new TestLevel2() );
+        Engine.instance().setLevel( new Level1());
 
         //model.setProgram(GLPrograms.getDefault());
 //        // make adjustments for screen ratio

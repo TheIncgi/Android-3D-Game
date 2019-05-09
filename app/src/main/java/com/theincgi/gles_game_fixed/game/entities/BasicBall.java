@@ -1,6 +1,7 @@
 package com.theincgi.gles_game_fixed.game.entities;
 
 import android.opengl.Matrix;
+import android.util.Log;
 
 import com.theincgi.gles_game_fixed.game.Engine;
 import com.theincgi.gles_game_fixed.game.entity.Entity;
@@ -48,12 +49,21 @@ public class BasicBall extends Entity implements ISphere {
             float[] near = obst.intersectsSurface(this);
             if (obst.pointOver(location)) {
                 velocityY = 0;
+                float yOffset = obst.yOffset(this.getLocation());
+                this.getLocation().setY(yOffset + getRadius());
+                Log.i("####", "onTick: "+yOffset);
+                float[] force = obst.force(this.location);
+                velocityX+=force[0];
+                velocityZ+=force[2];
                 break;
             }
         }
         location.move(velocityX, velocityY, velocityZ);
 
 
+        //ROLLING CODE
+        float speed = Utils.distance(0,0,0, velocityX, 0, velocityZ);
+        float volume = Utils.clamp(Utils.map(speed, 0, 2/**speed for max vol*/, 0, 1), 0, 1);
         if (velocityX != 0 || velocityZ != 0) {
             float rollAngle = (float) Math.toDegrees(Math.atan2(velocityZ, velocityX));
             rollAngle += 90; //axis of rotation
