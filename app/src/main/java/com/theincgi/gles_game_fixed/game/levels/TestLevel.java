@@ -1,5 +1,7 @@
 package com.theincgi.gles_game_fixed.game.levels;
 
+import android.content.Context;
+
 import com.theincgi.gles_game_fixed.game.Engine;
 import com.theincgi.gles_game_fixed.game.entities.Ball;
 import com.theincgi.gles_game_fixed.game.entities.BasicBall;
@@ -9,6 +11,11 @@ import com.theincgi.gles_game_fixed.game.obstacles.AngledFloor;
 public class TestLevel extends Level{
     //RigidBodyBall theBall = new RigidBodyBall(1);
     BasicBall theBall = new BasicBall();
+
+    public TestLevel(Context context) {
+        this.context = context;
+    }
+
     @Override
     public void load() {
         Engine.instance().addEntity( theBall );

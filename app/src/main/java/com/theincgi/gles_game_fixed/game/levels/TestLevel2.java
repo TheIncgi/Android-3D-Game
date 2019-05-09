@@ -1,5 +1,7 @@
 package com.theincgi.gles_game_fixed.game.levels;
 
+import android.content.Context;
+
 import com.theincgi.gles_game_fixed.game.Engine;
 import com.theincgi.gles_game_fixed.game.entities.BasicBall;
 import com.theincgi.gles_game_fixed.game.obstacles.Floor;
@@ -7,6 +9,11 @@ import com.theincgi.gles_game_fixed.game.obstacles.Hill;
 
 public class TestLevel2 extends Level{
     BasicBall theBall = new BasicBall();
+
+    public TestLevel2(Context context) {
+        this.context = context;
+    }
+
     @Override
     public void load() {
         int r = 1; //emulator cant handel higher numbers without gpu accel
