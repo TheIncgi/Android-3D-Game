@@ -30,6 +30,7 @@ public class MazeDatabase extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, VERSION);
     }
 
+    //The database will store an id, username, password and score
     private static final class MazeTable {
         private static final String TABLE = "mazes";
         private static final String COL_ID = "_id";
@@ -143,7 +144,5 @@ public class MazeDatabase extends SQLiteOpenHelper {
     }
 }
 
-
-//https://medium.com/@ssaurel/learn-to-save-data-with-sqlite-on-android-b11a8f7718d3
 
 
