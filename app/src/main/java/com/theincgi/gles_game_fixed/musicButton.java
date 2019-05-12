@@ -9,7 +9,7 @@ import android.widget.Button;
 import com.example.mazedatabase.R;
 
 
-public class musicButton extends AppCompatActivity {
+public class MusicButton extends AppCompatActivity {
 MediaPlayer mySong;
 private Button button;
 private Button button2;
