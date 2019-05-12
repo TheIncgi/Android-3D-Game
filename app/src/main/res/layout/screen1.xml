@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.theincgi.gles_game_fixed.Screen1"
-    tools:layout_constraintBottom_toTopOf="parent">
+    android:background="@drawable/pawel3"
+    tools:context=".Screen1">
 
-<fragment
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1"
-    android:id="@+id/fragment_lm_fragment"/>
 
-    <fragment
-        android:id="@+id/fragment_pm_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        app:layout_constraintVertical_weight="1" />
     <TextView
         android:id="@+id/Welcome"
         android:layout_width="wrap_content"
@@ -29,22 +19,19 @@
         android:text="@string/Welcome"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.474"
         app:layout_constraintStart_toStartOf="parent"
-
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         tools:textColor="Blue" />
-    <!--app:layout_constraintTop="textView"-->
+
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="12dp"
         android:layout_marginStart="46dp"
-        android:layout_marginLeft="46dp"
         android:layout_marginTop="62dp"
         android:layout_marginEnd="91dp"
-        android:layout_marginRight="91dp"
         android:layout_marginBottom="555dp"
         android:text="@string/enterUser"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -57,11 +44,16 @@
     <EditText
         android:id="@+id/enter_user"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="67dp"
         android:layout_marginTop="333dp"
         android:hint="Enter user name"
+        android:text="Enter Username"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/password"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
@@ -74,16 +66,30 @@
         android:layout_height="wrap_content"
         android:hint="Enter password"
         android:inputType="textPassword"
+        android:text="Enter Password"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="30sp"
         app:layout_constraintHeight_default="wrap"
         app:layout_constraintTop_toBottomOf="@+id/enter_user"
-        tools:layout_editor_absoluteX="35dp" />
+        tools:layout_editor_absoluteX="0dp"
+        tools:text="Enter Password" />
 
     <Button
         android:id="@+id/Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:onClick="onClick"
         android:text="Log in"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        android:textColor="@color/colorAccent"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:typeface="monospace"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/password"
+        app:layout_constraintVertical_bias="0.113"
         tools:layout_editor_absoluteX="0dp" />
+
+
 </android.support.constraint.ConstraintLayout>
