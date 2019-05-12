@@ -12,6 +12,7 @@ MediaPlayer mySong;
 private Button playButton;
 private Button selectLevelButton;
 private Button highScoreButton;
+private Button goBack;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +39,9 @@ private Button highScoreButton;
             //intent.getExtras().putInt(MainActivity.LEVEL_KEY, /**Level number here (starts at 1)*/);
         }else if( view.equals( highScoreButton )){
             intent = new Intent(this, Screen1.class);
+        }
+        else if( view.equals( goBack )){
+            intent = new Intent(this,Screen1.class);
         }
 
         if(intent != null){ //set by a button
