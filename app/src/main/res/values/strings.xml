@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">MazeDatabase</string>
-    <string name="app_name">GLES GAME</string>
     <string name="title_activity_maze_database">MazeDatabase</string>
     <string name="enterUser">Enter Your Username and Password</string>
     <string name="Welcome">Welcome to the Balance Maze</string>
+
+    <string name="play">play</string>
+    <string name="select_level">Select Level</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Welcome</string>

@@ -5,7 +5,7 @@
     android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity" >
+    tools:context="com.theincgi.gles_game_fixed.MainActivity" >
 
     <FrameLayout
         android:id="@+id/frameLayout"
@@ -17,3 +17,4 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </FrameLayout>
+</android.support.constraint.ConstraintLayout>

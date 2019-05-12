@@ -3,13 +3,13 @@ package com.theincgi.gles_game_fixed.render;
 import android.content.Context;
 
 
+import com.example.mazedatabase.R;
 import com.theincgi.gles_game_fixed.utils.Pair;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
-import com.theincgi.gles_game_fixed.R;
 
 
 public class GLPrograms {

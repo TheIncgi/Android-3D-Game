@@ -4,7 +4,8 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:context=".LM_fragment">
+    tools:context="com.theincgi.gles_game_fixed.Screen1">
+    <!--Previously lm fragment-->
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

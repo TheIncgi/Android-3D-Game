@@ -4,8 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MazeDatabase"
+
+    tools:context="com.theincgi.gles_game_fixed.Screen1"
     tools:showIn="@layout/activity_maze_database">
 
 </android.support.constraint.ConstraintLayout>
+
+
+<!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->

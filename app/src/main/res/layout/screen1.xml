@@ -5,7 +5,7 @@
     android:id="@+id/fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Screen1"
+    tools:context="com.theincgi.gles_game_fixed.Screen1"
     tools:layout_constraintBottom_toTopOf="parent">
 
 <fragment
@@ -31,10 +31,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop="textView"
+
         app:layout_constraintTop_toTopOf="parent"
         tools:textColor="Blue" />
-
+    <!--app:layout_constraintTop="textView"-->
 
     <TextView
         android:id="@+id/textView"
@@ -86,6 +86,4 @@
         android:text="Log in"
         app:layout_constraintTop_toBottomOf="@id/password"
         tools:layout_editor_absoluteX="0dp" />
-
-
 </android.support.constraint.ConstraintLayout>

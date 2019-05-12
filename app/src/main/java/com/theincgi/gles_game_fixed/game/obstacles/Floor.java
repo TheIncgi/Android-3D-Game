@@ -1,16 +1,9 @@
 package com.theincgi.gles_game_fixed.game.obstacles;
 
-import android.opengl.Matrix;
-import android.util.Log;
-
-import com.theincgi.gles_game_fixed.R;
-import com.theincgi.gles_game_fixed.game.entities.Ball;
 import com.theincgi.gles_game_fixed.game.entities.BasicBall;
-import com.theincgi.gles_game_fixed.game.entities.ISphere;
 import com.theincgi.gles_game_fixed.game.entities.RigidBodyBall;
 import com.theincgi.gles_game_fixed.game.entity.Entity;
 import com.theincgi.gles_game_fixed.geometry.ModelLoader3;
-import com.theincgi.gles_game_fixed.render.Camera;
 import com.theincgi.gles_game_fixed.utils.Location;
 import com.theincgi.gles_game_fixed.utils.Utils;
 
