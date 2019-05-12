@@ -40,7 +40,7 @@ public class Player {
         return score;
     }
 
-    public void setScore(){
+    public void setScore(String score){
         this.score = score;
     }
 
