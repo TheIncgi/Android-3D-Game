@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.mazedatabase.R;
 
 
 public class Screen1 extends AppCompatActivity implements View.OnClickListener {

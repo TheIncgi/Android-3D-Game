@@ -1,20 +1,11 @@
 package com.theincgi.gles_game_fixed;
 
 
-import android.content.Context;
-import android.opengl.GLSurfaceView;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
-import com.example.mazedatabase.R;
-import com.theincgi.gles_game_fixed.game.Engine;
-import com.theincgi.gles_game_fixed.game.entities.Ball;
 import com.theincgi.gles_game_fixed.game.levels.Level;
 import com.theincgi.gles_game_fixed.game.levels.Level1;
 import com.theincgi.gles_game_fixed.game.levels.Level2;
