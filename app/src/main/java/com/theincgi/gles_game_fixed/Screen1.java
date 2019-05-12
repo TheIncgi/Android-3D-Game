@@ -28,7 +28,8 @@ public class Screen1 extends AppCompatActivity implements View.OnClickListener {
     TextView textView;
     int id;
 
-    //music player
+    //music player, this comes from MusicService.java
+    //doBindService starts the music while doUnbindService will end it
     private boolean mIsBound = false;
     private MusicService mServ;
     private ServiceConnection Scon =new ServiceConnection(){
@@ -58,6 +59,8 @@ public class Screen1 extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
+    //Once the user enters their info and clicks the login button, they will move onto the second screen
+    //The music also starts playing on this screen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +74,6 @@ public class Screen1 extends AppCompatActivity implements View.OnClickListener {
         textView = (TextView)findViewById(R.id.textView);
         button = (Button)findViewById(R.id.Button);
         button.setOnClickListener(Screen1.this);
-        mySong=MediaPlayer.create(this,R.raw.coin_grab_3);
         db = new MazeDatabase(this);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -110,7 +112,7 @@ public class Screen1 extends AppCompatActivity implements View.OnClickListener {
 
         db.addUser(userPlayer);
 
-        Toast.makeText(getApplicationContext(), "Adding" + username, Toast.LENGTH_SHORT);
+        Toast.makeText(getApplicationContext(), "Adding" + username, Toast.LENGTH_LONG);
         Intent intent = new Intent(this, musicButton.class);
         startActivity(intent);
         this.finish();
