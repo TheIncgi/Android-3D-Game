@@ -35,8 +35,8 @@ private Button goBack;
         }else if ( view .equals( selectLevelButton ) ){
             //TODO create an intent to launch the selected level
             //this little chunk of code would be run in the level select activity
-            //intent = new Intent(this, SomeActivityNameHere.class);
-            //intent.getExtras().putInt(MainActivity.LEVEL_KEY, /**Level number here (starts at 1)*/);
+            intent = new Intent(this, LevelSelector.class);
+            intent.getExtras().putInt(MainActivity.LEVEL_KEY, /**Level number here (starts at 1)*/);
         }else if( view.equals( highScoreButton )){
             intent = new Intent(this, Screen1.class);
         }
