@@ -6,7 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import static com.theincgi.gles_game_fixed.R.layout.activity_music_button;
+import com.example.mazedatabase.R;
+
 
 public class musicButton extends AppCompatActivity {
 MediaPlayer mySong;
@@ -15,7 +16,7 @@ private Button button2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(activity_music_button);
+        setContentView(R.layout.activity_music_button);
         mySong=MediaPlayer.create(this,R.raw.coin_grab_3);
         button = findViewById(R.id.button);
         button2 = findViewById(R.id.levelButt);
