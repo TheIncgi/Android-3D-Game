@@ -8,6 +8,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.widget.Toast;
 
+//The music service allows background music to play throughout the app
 public class MusicService extends Service  implements MediaPlayer.OnErrorListener {
 
     private final IBinder mBinder = new ServiceBinder();
@@ -28,6 +29,8 @@ public class MusicService extends Service  implements MediaPlayer.OnErrorListene
         return mBinder;
     }
 
+    //starts the background music when the app is starting
+    //The music is from streets of rage 2
     @Override
     public void onCreate() {
         super.onCreate();
