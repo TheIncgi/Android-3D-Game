@@ -2,11 +2,20 @@ package com.theincgi.gles_game_fixed;
 
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 
+import java.sql.SQLInput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +82,7 @@ public class MazeDatabase extends SQLiteOpenHelper {
                 Player player = new Player();
                 player.setId(Integer.parseInt(cursor.getString(0)));
                 player.setUsername(cursor.getString(1));
-                player.setScore(cursor.getString(2));
+                //player.setScore(cursor.getInt(2));
                 player.setPassword(cursor.getString(3));
 
                 playerList.add(player);
@@ -92,21 +101,22 @@ public class MazeDatabase extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void getUser(String userToGet) {
+    public String getUser(String username) {
 
         SQLiteDatabase db = getReadableDatabase();
 
         String sql = "select * from " + MazeTable.TABLE + " where username = ?";
-        Cursor cursor = db.rawQuery(sql, new String[]{userToGet});
+        Cursor cursor = db.rawQuery(sql, new String[]{username});
         if (cursor.moveToFirst()) {
             do {
                 long id = cursor.getLong(0);
-                String username = cursor.getString(1);
+                username = cursor.getString(1);
                 String score = cursor.getString((2));
                 Log.d(TAG, "Username = " + id + ", " + username);
             } while (cursor.moveToNext());
         }
         cursor.close();
+        return username;
     }
 
     public boolean updateMaze(Player player){
