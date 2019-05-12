@@ -1,4 +1,4 @@
-package com.example.mazedatabase;
+package com.theincgi.gles_game_fixed;
 
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;

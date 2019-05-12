@@ -1,4 +1,4 @@
-package com.example.mazedatabase;
+package com.theincgi.gles_game_fixed;
 
 import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.example.mazedatabase.R;
 
 
 public class Screen1 extends AppCompatActivity implements View.OnClickListener {

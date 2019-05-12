@@ -1,4 +1,4 @@
-package com.example.mazedatabase;
+package com.theincgi.gles_game_fixed;
 
 public class Player {
 
