@@ -28,6 +28,7 @@ public class Screen1 extends AppCompatActivity implements View.OnClickListener {
     TextView textView;
     int id;
 
+    /*
     //music player, this comes from MusicService.java
     //doBindService starts the music while doUnbindService will end it
     private boolean mIsBound = false;
@@ -58,7 +59,7 @@ public class Screen1 extends AppCompatActivity implements View.OnClickListener {
             mIsBound = false;
         }
     }
-
+*/
     //Once the user enters their info and clicks the login button, they will move onto the second screen
     //The music also starts playing on this screen
     @Override
@@ -66,9 +67,9 @@ public class Screen1 extends AppCompatActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.screen1);
         Configuration config = getResources().getConfiguration();
-        this.doBindService();
+        /* this.doBindService();
         Intent music = new Intent(this,MusicService.class);
-        startService(music);
+        startService(music); */
 
         welcome = (TextView)findViewById(R.id.Welcome);
         textView = (TextView)findViewById(R.id.textView);
