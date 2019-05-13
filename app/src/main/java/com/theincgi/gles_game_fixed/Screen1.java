@@ -32,7 +32,10 @@ public class Screen1 extends AppCompatActivity implements View.OnClickListener {
     TextView welcome;
     TextView textView;
     int id;
-/*
+
+    //this is the first screen the player sees
+    //it will ask for a username/password and stores it into the database
+    //it will also comeback to this screen to display scores (W.I.P.)
     //music player
     private boolean mIsBound = false;
     private MusicService mServ;
@@ -62,15 +65,15 @@ public class Screen1 extends AppCompatActivity implements View.OnClickListener {
             mIsBound = false;
         }
     }
-*/
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.screen1);
         Configuration config = getResources().getConfiguration();
-        /*this.doBindService();
+        this.doBindService();
         Intent music = new Intent(this,MusicService.class);
-        startService(music); */
+        startService(music);
 
         welcome = (TextView)findViewById(R.id.Welcome);
         textView = (TextView)findViewById(R.id.textView);
@@ -84,19 +87,6 @@ public class Screen1 extends AppCompatActivity implements View.OnClickListener {
             this.scores();
         }
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
-
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.commit();
-
-     /*   if (config.orientation == Configuration.ORIENTATION_LANDSCAPE){
-            LM_fragment ls_fragment = new LM_fragment();
-            fragmentTransaction.replace(android.R.id.content, ls_fragment);}else{
-            PM_fragment pm_fragment = new PM_fragment();
-            fragmentTransaction.replace(android.R.id.content, pm_fragment);
-        }
-        fragmentTransaction.commit();*/
     }
 
 
@@ -120,8 +110,10 @@ public class Screen1 extends AppCompatActivity implements View.OnClickListener {
 
         db.addUser(userPlayer);
 
-        Toast.makeText(getApplicationContext(), "Adding" + username, Toast.LENGTH_SHORT);
+        Toast.makeText(getApplicationContext(), "Adding " +" " + username + " " + "to the DB", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, musicButton.class);
+        intent.putExtra("Username", username);
+        intent.putExtra("id", id);
         startActivity(intent);
         this.finish();
     }
@@ -130,8 +122,8 @@ public class Screen1 extends AppCompatActivity implements View.OnClickListener {
         HashMap<String,String> data = db.getData();
         String level1Score = data.get("LEVEL1");
         String level2Score = data.get("LEVEL2");
-        Toast.makeText(getApplicationContext(), "level 1 score is" + level1Score, Toast.LENGTH_LONG);
-        Toast.makeText(getApplicationContext(), "level 2 score is" + level2Score, Toast.LENGTH_LONG);
+        Toast.makeText(getApplicationContext(), "level 1 score is" + level1Score, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "level 2 score is" + level2Score, Toast.LENGTH_LONG).show();
     }
 
 }

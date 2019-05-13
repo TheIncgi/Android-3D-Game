@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 public class musicButton extends AppCompatActivity {
     MediaPlayer mySong;
@@ -21,36 +23,8 @@ public class musicButton extends AppCompatActivity {
     public static final int LOAD_METHOD_CODE = 92840;
 
 
-    //music player
-    private boolean mIsBound = false;
-    private MusicService mServ;
-    private ServiceConnection Scon =new ServiceConnection(){
-
-        public void onServiceConnected(ComponentName name, IBinder
-                binder) {
-            mServ = ((MusicService.ServiceBinder)binder).getService();
-        }
-
-        public void onServiceDisconnected(ComponentName name) {
-            mServ = null;
-        }
-    };
-
-    void doBindService(){
-        bindService(new Intent(this,MusicService.class),
-                Scon, Context.BIND_AUTO_CREATE);
-        mIsBound = true;
-    }
-
-    void doUnbindService()
-    {
-        if(mIsBound)
-        {
-            unbindService(Scon);
-            mIsBound = false;
-        }
-    }
-
+  //this screen acts as the main menu
+    //it will give the choice of proceeding to level 1 or choosing a harder level
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,11 +33,37 @@ public class musicButton extends AppCompatActivity {
         playButton = findViewById(R.id.button);
         selectLevelButton = findViewById(R.id.levelButt);
         highScoreButton = findViewById(R.id.highScoreButton);
+        //String username = getIntent().getStringExtra("Username");
 
-        this.doBindService();
+        //this.doBindService();
         Intent music = new Intent(this,MusicService.class);
         startService(music);
+        //displayName();
+       // EditText usernameget = (EditText)findViewById(R.id.edittext);
+        String username = getIntent().getStringExtra("Username");
+
     }
+
+  /*  public void displayName(){
+        String username = getIntent().getStringExtra("Username");
+        Toast.makeText(this, "Hello" + username, Toast.LENGTH_SHORT).show();
+        EditText usernameget = (EditText)findViewById(R.id.edittext);
+        usernameget.setText(username);
+        to launch
+                    <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        to not launch
+                    <!--<intent-filter>-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
+
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+
+    }*/
+
     public void playIT(View view) {
         mySong.start();
         Intent intent = null;
@@ -72,14 +72,15 @@ public class musicButton extends AppCompatActivity {
             //example
             intent = new Intent(this, MainActivity.class);
             intent.putExtras(new Bundle());
-            intent.getExtras().putInt(MainActivity.LEVEL_KEY, 1); //select level 1
-
+            intent.getExtras().putInt(MainActivity.LEVEL_KEY, 1);//select level 1
+            //String username = getIntent().getStringExtra("Username");
+            //intent.putExtra("Username", username);
         }else if ( view .equals( selectLevelButton ) ){
             intent = new Intent(this, Levelselector.class);
         }else if( view.equals( highScoreButton )){
             intent = new Intent(this, Screen1.class);
-            i.putIntExtra(LOAD_METHOD_ID, LOAD_METHOD_CODE);
-            startActivity(i);
+            intent.putExtra(LOAD_METHOD_ID, LOAD_METHOD_CODE);
+            startActivity(intent);
         }
         else if( view.equals( goBack )){
             intent = new Intent(this,Screen1.class);

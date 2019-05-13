@@ -14,6 +14,9 @@ import com.theincgi.gles_game_fixed.game.levels.Level2;
 
 public class Levelselector extends AppCompatActivity {
 
+    //this class will decide what level the player wishes to chooose
+    //right now there are only 2 but we could expand it to much more given more time
+    //they are buttons, we would use radio buttons if the amount became too much for the screen
     private Button buttonOne;
     private Button buttonTwo;
     private Button buttonThree;
@@ -33,10 +36,12 @@ public class Levelselector extends AppCompatActivity {
 
         buttonOne = findViewById(R.id.level1);
         buttonTwo = findViewById(R.id.level2);
+        buttonThree = findViewById(R.id.goBack);
         mySong = MediaPlayer.create(this, R.raw.coin_grab_3);
 
 
     }
+
 
     public void onClickLevelOne(View view){
 
@@ -57,12 +62,16 @@ public class Levelselector extends AppCompatActivity {
         startActivity(intent);
 
     }
-    //public void onClickLevelThree(View view){
 
-       // Intent intent = new Intent(this, Level3.class);
-       // startActivity(intent);
+    //takes you back to the main menu
+    public void onClickLevelThree(View view){
 
-   // }
+            mySong.start();
+        Intent intent = new Intent(this, musicButton.class);
+        intent.putExtras(new Bundle());
+        startActivity(intent);
+
+    }
 
     @Override
     public void finish() {

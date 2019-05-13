@@ -6,10 +6,6 @@ import android.os.Bundle;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -26,11 +22,10 @@ public class MazeDatabase extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "maze.db";
     private static final int VERSION = 2;
+    private static MazeDatabase sInstance;
 
-    public MazeDatabase(Context context) {
-        super(context, DATABASE_NAME, null, VERSION);
-    }
-
+//the database covers the username, password, score, and scores for level1/level2
+    //the database stores information given by the other classes
     private static final class MazeTable {
         private static final String TABLE = "mazes";
         private static final String COL_ID = "_id";
@@ -40,6 +35,17 @@ public class MazeDatabase extends SQLiteOpenHelper {
         private static final String LEVEL1 = "LEVEL1";
         private static final String LEVEL2 = "LEVEL2";
         private static final String[] COLUMNS = { COL_ID, COL_USERNAME, COL_SCORE, COL_PASSWORD, LEVEL1, LEVEL2};
+    }
+
+    public static synchronized MazeDatabase getInstance(Context context){
+        if (sInstance == null){
+            sInstance = new MazeDatabase(context.getApplicationContext());
+        }
+        return sInstance;
+    }
+
+    public MazeDatabase(Context context) {
+        super(context, DATABASE_NAME, null, VERSION);
     }
 
     @Override
@@ -122,18 +128,19 @@ public void saveScore(int level, String score){
 
         SQLiteDatabase db = getReadableDatabase();
 
+        String rv = "Not found";
         String sql = "select * from " + MazeTable.TABLE + " where username = ?";
         Cursor cursor = db.rawQuery(sql, new String[]{username});
         if (cursor.moveToFirst()) {
             do {
-                long id = cursor.getLong(0);
-                username = cursor.getString(1);
-                String score = cursor.getString((2));
-                Log.d(TAG, "Username = " + id + ", " + username);
+                //long id = cursor.getLong(0);
+                rv = cursor.getString(1);
+                //String score = cursor.getString((2));
+                Log.d(TAG, "Username = " + rv + ", " + username);
             } while (cursor.moveToNext());
         }
         cursor.close();
-        return username;
+        return rv;
     }
 
     public boolean updateMaze(Player player){
