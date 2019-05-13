@@ -1,10 +1,12 @@
 package com.theincgi.gles_game_fixed.game.levels;
 
 import android.content.Context;
+import android.content.Intent;
 import android.widget.Toast;
 
 import com.theincgi.gles_game_fixed.Levelselector;
 import com.theincgi.gles_game_fixed.MainActivity;
+import com.theincgi.gles_game_fixed.MazeDatabase;
 import com.theincgi.gles_game_fixed.game.Engine;
 import com.theincgi.gles_game_fixed.game.entities.BasicBall;
 import com.theincgi.gles_game_fixed.game.obstacles.Floor;
@@ -13,6 +15,7 @@ import com.theincgi.gles_game_fixed.game.obstacles.Goal;
 public class Level1 extends Level {
     BasicBall theBall = new BasicBall();
     Goal goal;
+    private MazeDatabase db;
 
     public Level1(Context context) {
         this.context = context;
@@ -45,9 +48,13 @@ public class Level1 extends Level {
         if(theBall != null && theBall.getLocation().getY() < -3){
             theBall.getLocation().setPos(0,2,0);
             theBall.resetVelicty();
+
         }
         if(goal!=null && theBall!=null && goal.pointOver(theBall.getLocation())){
             //TODO on level done
+            MazeDatabase db = new MazeDatabase(context);
+            //level1 vs level2?
+            db.saveScore(1, String.valueOf(getTime()));
             MainActivity.onFinish();
             Levelselector.toast("Time: "+ticks);
         }
