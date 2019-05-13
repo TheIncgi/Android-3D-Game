@@ -12,11 +12,15 @@ import android.view.View;
 import android.widget.Button;
 
 public class musicButton extends AppCompatActivity {
-MediaPlayer mySong;
-private Button playButton;
-private Button selectLevelButton;
-private Button highScoreButton;
-private Button goBack;
+    MediaPlayer mySong;
+    private Button playButton;
+    private Button selectLevelButton;
+    private Button highScoreButton;
+    private Button goBack;
+    public static final String LOAD_METHOD_ID = "load_method_id";
+    public static final int LOAD_METHOD_CODE = 92840;
+
+
     //music player
     private boolean mIsBound = false;
     private MusicService mServ;
@@ -46,7 +50,7 @@ private Button goBack;
             mIsBound = false;
         }
     }
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +59,7 @@ private Button goBack;
         playButton = findViewById(R.id.button);
         selectLevelButton = findViewById(R.id.levelButt);
         highScoreButton = findViewById(R.id.highScoreButton);
-        
+
         this.doBindService();
         Intent music = new Intent(this,MusicService.class);
         startService(music);
@@ -74,6 +78,8 @@ private Button goBack;
             intent = new Intent(this, Levelselector.class);
         }else if( view.equals( highScoreButton )){
             intent = new Intent(this, Screen1.class);
+            i.putIntExtra(LOAD_METHOD_ID, LOAD_METHOD_CODE);
+            startActivity(i);
         }
         else if( view.equals( goBack )){
             intent = new Intent(this,Screen1.class);

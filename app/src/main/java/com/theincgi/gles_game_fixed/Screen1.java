@@ -18,6 +18,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.HashMap;
+
+import static com.theincgi.gles_game_fixed.musicButton.LOAD_METHOD_CODE;
+import static com.theincgi.gles_game_fixed.musicButton.LOAD_METHOD_ID;
+
 
 public class Screen1 extends AppCompatActivity implements View.OnClickListener {
     private MazeDatabase db;
@@ -27,10 +32,8 @@ public class Screen1 extends AppCompatActivity implements View.OnClickListener {
     TextView welcome;
     TextView textView;
     int id;
-
-    /*
-    //music player, this comes from MusicService.java
-    //doBindService starts the music while doUnbindService will end it
+/*
+    //music player
     private boolean mIsBound = false;
     private MusicService mServ;
     private ServiceConnection Scon =new ServiceConnection(){
@@ -60,14 +63,12 @@ public class Screen1 extends AppCompatActivity implements View.OnClickListener {
         }
     }
 */
-    //Once the user enters their info and clicks the login button, they will move onto the second screen
-    //The music also starts playing on this screen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.screen1);
         Configuration config = getResources().getConfiguration();
-        /* this.doBindService();
+        /*this.doBindService();
         Intent music = new Intent(this,MusicService.class);
         startService(music); */
 
@@ -75,7 +76,13 @@ public class Screen1 extends AppCompatActivity implements View.OnClickListener {
         textView = (TextView)findViewById(R.id.textView);
         button = (Button)findViewById(R.id.Button);
         button.setOnClickListener(Screen1.this);
+        mySong=MediaPlayer.create(this,R.raw.coin_grab_3);
         db = new MazeDatabase(this);
+
+        int code = getIntent().getIntExtra(LOAD_METHOD_ID, 0);
+        if (code == LOAD_METHOD_CODE) {
+            this.scores();
+        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
@@ -113,10 +120,18 @@ public class Screen1 extends AppCompatActivity implements View.OnClickListener {
 
         db.addUser(userPlayer);
 
-        Toast.makeText(getApplicationContext(), "Adding" + username, Toast.LENGTH_LONG);
+        Toast.makeText(getApplicationContext(), "Adding" + username, Toast.LENGTH_SHORT);
         Intent intent = new Intent(this, musicButton.class);
         startActivity(intent);
         this.finish();
+    }
+
+    public void scores(){
+        HashMap<String,String> data = db.getData();
+        String level1Score = data.get("LEVEL1");
+        String level2Score = data.get("LEVEL2");
+        Toast.makeText(getApplicationContext(), "level 1 score is" + level1Score, Toast.LENGTH_LONG);
+        Toast.makeText(getApplicationContext(), "level 2 score is" + level2Score, Toast.LENGTH_LONG);
     }
 
 }

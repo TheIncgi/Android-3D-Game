@@ -8,6 +8,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,6 +17,7 @@ import android.view.View;
 
 import java.sql.SQLInput;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
@@ -28,14 +31,15 @@ public class MazeDatabase extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, VERSION);
     }
 
-    //The database will store an id, username, password and score
     private static final class MazeTable {
         private static final String TABLE = "mazes";
         private static final String COL_ID = "_id";
         private static final String COL_USERNAME = "username";
         private static final String COL_PASSWORD = "password";
         private static final String COL_SCORE = "score";
-        private static final String[] COLUMNS = { COL_ID, COL_USERNAME, COL_SCORE, COL_PASSWORD};
+        private static final String LEVEL1 = "LEVEL1";
+        private static final String LEVEL2 = "LEVEL2";
+        private static final String[] COLUMNS = { COL_ID, COL_USERNAME, COL_SCORE, COL_PASSWORD, LEVEL1, LEVEL2};
     }
 
     @Override
@@ -45,7 +49,8 @@ public class MazeDatabase extends SQLiteOpenHelper {
                 MazeTable.COL_USERNAME + "username " +
                 MazeTable.COL_PASSWORD + "password," +
                 MazeTable.COL_SCORE + "score," +
-                MazeTable.COL_PASSWORD + "password )");
+                MazeTable.LEVEL1 + "LEVEL1`, " +
+                MazeTable.LEVEL2 + "LEVEL2`)");
     }
 
     @Override
@@ -90,7 +95,7 @@ public class MazeDatabase extends SQLiteOpenHelper {
         return playerList;
     }
 
-    void addScore(Player player){
+    public void addScore(Player player){
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -99,7 +104,20 @@ public class MazeDatabase extends SQLiteOpenHelper {
         db.insert(MazeTable.TABLE, null, values);
         db.close();
     }
-
+public void saveScore(int level, String score){
+    SQLiteDatabase db = this.getWritableDatabase();
+    ContentValues data = new ContentValues();
+    switch(level){
+        case 1:
+            data.put(MazeTable.LEVEL1, score);
+            break;
+        case 2:
+            data.put(MazeTable.LEVEL2,score);
+            break;
+    }
+    db.insert(MazeTable.TABLE,null,data);
+    db.close();
+}
     public String getUser(String username) {
 
         SQLiteDatabase db = getReadableDatabase();
@@ -139,6 +157,23 @@ public class MazeDatabase extends SQLiteOpenHelper {
                 new String[] { Long.toString(id)});
         db.close();
         return rowsDeleted > 0;
+    }
+
+    public HashMap<String,String> getData(){
+        HashMap<String,String> scoreMap = new HashMap<>();
+        String selectQuery = "SELECT  * FROM " + MazeTable.TABLE ;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+
+                scoreMap.put(MazeTable.LEVEL1,cursor.getString(cursor.getColumnIndex(MazeTable.LEVEL1)));
+                scoreMap.put(MazeTable.LEVEL2,cursor.getString(cursor.getColumnIndex(MazeTable.LEVEL2)));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return scoreMap;
+
     }
 }
 
