@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class MusicButton extends AppCompatActivity {
+public class musicButton extends AppCompatActivity {
 MediaPlayer mySong;
 private Button playButton;
 private Button selectLevelButton;
