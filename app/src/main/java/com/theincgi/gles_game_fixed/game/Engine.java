@@ -49,7 +49,7 @@ public class Engine {
     BasicBall theBall;
 
     public static void init(Context context){
-        INSTANCE = INSTANCE==null? new Engine( context ) : INSTANCE;
+        INSTANCE = new Engine( context );
     }
 
 

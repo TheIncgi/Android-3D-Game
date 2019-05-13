@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.theincgi.gles_game_fixed.MainActivity;
 import com.theincgi.gles_game_fixed.game.levels.Level1;
@@ -18,10 +19,17 @@ public class Levelselector extends AppCompatActivity {
     private Button buttonThree;
     MediaPlayer mySong;
 
+    private static Levelselector instance;
+    public static void toast(String s) {
+        if(instance!=null)
+            Toast.makeText(instance, s, Toast.LENGTH_LONG);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.level_sel);
+        instance = this;
 
         buttonOne = findViewById(R.id.level1);
         buttonTwo = findViewById(R.id.level2);
@@ -55,4 +63,10 @@ public class Levelselector extends AppCompatActivity {
        // startActivity(intent);
 
    // }
+
+    @Override
+    public void finish() {
+        super.finish();
+        instance = null;
+    }
 }

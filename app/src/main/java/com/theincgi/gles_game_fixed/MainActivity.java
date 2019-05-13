@@ -20,11 +20,18 @@ public class MainActivity extends AppCompatActivity {
     CustomGLSurfaceViewRenderer glSurfaceViewRenderer;
     FrameLayout frameLayout;
 
+    private static MainActivity instance;
+
     public static final String LEVEL_KEY = "LEVEL";
+
+    public static void onFinish() {
+        instance.finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance = this;
         //public static final int FLAG_KEEP_SCREEN_ON = 0x00000080
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         boolean useXML = false;

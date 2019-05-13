@@ -3,6 +3,8 @@ package com.theincgi.gles_game_fixed.game.levels;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.theincgi.gles_game_fixed.Levelselector;
+import com.theincgi.gles_game_fixed.MainActivity;
 import com.theincgi.gles_game_fixed.game.Engine;
 import com.theincgi.gles_game_fixed.game.entities.BasicBall;
 import com.theincgi.gles_game_fixed.game.obstacles.Floor;
@@ -39,12 +41,15 @@ public class Level1 extends Level {
 
     @Override
     public void onTick() {
+        super.onTick();
         if(theBall != null && theBall.getLocation().getY() < -3){
             theBall.getLocation().setPos(0,2,0);
             theBall.resetVelicty();
         }
         if(goal!=null && theBall!=null && goal.pointOver(theBall.getLocation())){
             //TODO on level done
+            MainActivity.onFinish();
+            Levelselector.toast("Time: "+ticks);
         }
     }
 }

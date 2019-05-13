@@ -10,7 +10,9 @@ public abstract class Level {
     protected Context context;
     public static final int ID = idCounter++;
     abstract public void load();
-    abstract public void onTick();
+    public void onTick(){
+        ticks++;
+    }
 
     public float getTime(){
         return ticks/(float)Engine.ticksPerSecond();
