@@ -25,7 +25,9 @@ public class GLPrograms {
     }
 
     public static void init(){
-        if(init)return;
+        //if(init)return;
+        materialLookup.clear();
+        sourceLookup.clear();
         register("DEFAULT", R.raw.default_vertex, R.raw.default_fragment);
         register( "fancy", R.raw.fancy_vertex, R.raw.fancy_fragment);
         DEFAULT_PROGRAM = get("DEFAULT");

@@ -28,6 +28,7 @@ public class ModelLoader3 {
     private Context context;
 
     public static void init(Context context) {
+        instance().loadedModels.clear();
         instance().context = context;
     }
     public static ModelLoader3 instance(){

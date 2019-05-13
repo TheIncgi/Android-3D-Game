@@ -47,8 +47,8 @@ public class Levelselector extends AppCompatActivity {
 
         mySong.start();
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtras(new Bundle());
-        intent.getExtras().putInt(MainActivity.LEVEL_KEY, 1);
+//        intent.putExtras(new Bundle());
+        intent.putExtra(MainActivity.LEVEL_KEY, 1);
         startActivity(intent);
 
     }
@@ -57,8 +57,8 @@ public class Levelselector extends AppCompatActivity {
 
         mySong.start();
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtras(new Bundle());
-        intent.getExtras().putInt(MainActivity.LEVEL_KEY, 2);
+       // intent.putExtras(new Bundle());
+        intent.putExtra(MainActivity.LEVEL_KEY, 2);
         startActivity(intent);
 
     }

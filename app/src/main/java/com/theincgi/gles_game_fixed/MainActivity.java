@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         Level.MakeLevel levelMake = new Level.MakeLevel() {
             @Override
             public Level make() {
-                switch(getIntent().getIntExtra(LEVEL_KEY, 2)){
+                switch(getIntent().getIntExtra(LEVEL_KEY, -1)){
                     case 1:
                         return new Level1(MainActivity.this);
                     case 2:

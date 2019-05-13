@@ -17,6 +17,7 @@ public class MaterialManager {
 
     private MaterialManager(){}
     public static void init(Context context) {
+        loadedMaterials.clear();
         MaterialManager.context = context;
     }
 
