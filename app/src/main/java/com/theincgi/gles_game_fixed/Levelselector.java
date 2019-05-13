@@ -33,7 +33,8 @@ public class Levelselector extends AppCompatActivity {
     public void onClickLevelOne(View view){
 
         mySong.start();
-        Intent intent = new Intent(this, Level1.class);
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtras(new Bundle());
         intent.getExtras().putInt(MainActivity.LEVEL_KEY, 1);
         startActivity(intent);
 
@@ -42,7 +43,8 @@ public class Levelselector extends AppCompatActivity {
     public void onClickLevelTwo(View view){
 
         mySong.start();
-        Intent intent = new Intent(this, Level2.class);
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtras(new Bundle());
         intent.getExtras().putInt(MainActivity.LEVEL_KEY, 2);
         startActivity(intent);
 
