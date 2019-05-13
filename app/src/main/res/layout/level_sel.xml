@@ -63,7 +63,7 @@
         android:layout_marginEnd="8dp"
         android:background="@color/colorPrimary"
         android:fontFamily="serif-monospace"
-        android:onClick="goBack"
+        android:onClick="onClickLevelThree"
         android:text="Go Back"
         android:textColor="@color/colorAccent"
         android:textSize="36sp"
