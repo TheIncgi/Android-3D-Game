@@ -6,7 +6,7 @@
 
     <string name="play">play</string>
     <string name="select_level">Select Level</string>
-
+    <string name="goBack">Go Back</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Welcome</string>
     <string name="highScores">High Scores</string>

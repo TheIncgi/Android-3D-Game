@@ -1,4 +1,4 @@
-package com.example.finalprojectsetting;
+package com.theincgi.gles_game_fixed;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -6,6 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import com.theincgi.gles_game_fixed.MainActivity;
+import com.theincgi.gles_game_fixed.game.levels.Level1;
+import com.theincgi.gles_game_fixed.game.levels.Level2;
 
 public class Levelselector extends AppCompatActivity {
 
