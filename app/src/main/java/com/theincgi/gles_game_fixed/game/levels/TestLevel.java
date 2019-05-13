@@ -13,6 +13,7 @@ public class TestLevel extends Level{
     BasicBall theBall = new BasicBall();
 
     public TestLevel(Context context) {
+        super(1);
         this.context = context;
     }
 
