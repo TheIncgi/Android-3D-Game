@@ -10,7 +10,7 @@ import com.theincgi.gles_game_fixed.game.obstacles.Hill;
 
 public class Level2 extends  Level1 {
     public Level2(Context context) {
-        super(context);
+        super(2, context);
     }
 
     @Override

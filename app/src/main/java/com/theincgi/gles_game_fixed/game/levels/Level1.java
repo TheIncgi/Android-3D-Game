@@ -17,7 +17,13 @@ public class Level1 extends Level {
     Goal goal;
     private MazeDatabase db;
 
+
     public Level1(Context context) {
+        super(1);
+        this.context = context;
+    }
+    public Level1(int lNum, Context context){
+        super(lNum);
         this.context = context;
     }
 
@@ -54,7 +60,7 @@ public class Level1 extends Level {
             //TODO on level done
             MazeDatabase db = new MazeDatabase(context);
             //level1 vs level2?
-            db.saveScore(1, String.valueOf(getTime()));
+            db.saveScore(LELEL_NUMBER, String.valueOf(getTime()));
             MainActivity.onFinish();
             Levelselector.toast("Time: "+ticks);
         }

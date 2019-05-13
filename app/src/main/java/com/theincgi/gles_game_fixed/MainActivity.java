@@ -3,9 +3,11 @@ package com.theincgi.gles_game_fixed;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import com.theincgi.gles_game_fixed.game.Engine;
 import com.theincgi.gles_game_fixed.game.levels.Level;
 import com.theincgi.gles_game_fixed.game.levels.Level1;
 import com.theincgi.gles_game_fixed.game.levels.Level2;
@@ -15,6 +17,7 @@ import com.theincgi.gles_game_fixed.render.CustomGLSurfaceViewRenderer;
 
 
 public class MainActivity extends AppCompatActivity {
+    public static final String TAG = "##MAINACTIVITY";
     //ConstraintLayout constraintLayout;
     CustomGLSurfaceView glSurfaceView;
     CustomGLSurfaceViewRenderer glSurfaceViewRenderer;
@@ -26,12 +29,20 @@ public class MainActivity extends AppCompatActivity {
 
     public static void onFinish() {
         instance.finish();
+        Engine.instance().stop();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Engine.instance().stop();
+        finish();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         instance = this;
+        Log.i(TAG, "onCreate: MainActivity");
         //public static final int FLAG_KEEP_SCREEN_ON = 0x00000080
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         boolean useXML = false;
@@ -82,6 +93,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Engine.instance().stop();
+    }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Engine.instance().start();
+    }
 }

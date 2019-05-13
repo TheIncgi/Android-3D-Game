@@ -6,6 +6,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.opengl.Matrix;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.theincgi.gles_game_fixed.game.entities.Ball;
@@ -30,6 +31,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class Engine {
+    
+    public  static final String TAG = "##ENGINE";
     private static Engine INSTANCE;
     LinkedList<Entity> entities = new LinkedList<>();
     LinkedList<BaseObstacle> obstacales = new LinkedList<>();
@@ -162,17 +165,9 @@ public class Engine {
     }
 
     public void onTick() {
+        Log.i(TAG, "onTick: EngineTick");
         long time = System.currentTimeMillis();
 
-//        {
-//        float[] m = Utils.matrixStack.get();
-//        Matrix.setIdentityM(m, 0);
-//        Matrix.rotateM(m, 0, rotationSensor., 0, 0, 1);
-//        Matrix.rotateM(m, 0, getPitch(), 0, 1, 0);
-//        Matrix.rotateM(m, 0, getYaw(), 1, 0, 0);
-//        Matrix.multiplyMM(gravity, 0, );
-//        Utils.matrixStack.popMatrix();
-//        }
         synchronized (obstacales){
             synchronized (obstToAdd){
                 obstacales.addAll(obstToAdd);
@@ -250,9 +245,11 @@ public class Engine {
         }
     }
 
-    public void start(){
+    public synchronized void start(){
+        if(sortTimer!=null) return;
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
+        Log.i(TAG, "***START***");
         sortTimer = scheduler.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
@@ -260,9 +257,14 @@ public class Engine {
             }
         }, 0, 1000/ticksPerSecond(), TimeUnit.MILLISECONDS);
     }
-    public void stop(){
-        if(sortTimer!=null)
-            sortTimer.cancel(false);
+    public synchronized void stop(){
+        if(sortTimer!=null) {
+            sortTimer.cancel(true);
+            Log.i(TAG, "***stop***");
+        }else{
+            Log.w(TAG, "stop: no timer");
+        }
+        sortTimer = null;
     }
 
     public LinkedList<Entity> getEntities() {
