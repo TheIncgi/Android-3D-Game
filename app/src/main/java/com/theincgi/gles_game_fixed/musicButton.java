@@ -71,7 +71,6 @@ public class musicButton extends AppCompatActivity {
 
             //example
             intent = new Intent(this, MainActivity.class);
-//            intent.putExtras(new Bundle());
             intent.putExtra(MainActivity.LEVEL_KEY, 1);//select level 1
             //String username = getIntent().getStringExtra("Username");
             //intent.putExtra("Username", username);
