@@ -47,9 +47,9 @@
         android:layout_height="67dp"
         android:layout_marginTop="333dp"
         android:hint="Enter user name"
-        android:text="Enter Username"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textColor="@color/colorPrimaryDark"
+        android:textColorHint="@android:color/holo_green_dark"
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/password"
         app:layout_constraintEnd_toEndOf="parent"
@@ -66,13 +66,12 @@
         android:layout_height="wrap_content"
         android:hint="Enter password"
         android:inputType="textPassword"
-        android:text="Enter Password"
         android:textColor="@color/colorPrimaryDark"
+        android:textColorHint="@android:color/holo_green_dark"
         android:textSize="30sp"
         app:layout_constraintHeight_default="wrap"
         app:layout_constraintTop_toBottomOf="@+id/enter_user"
-        tools:layout_editor_absoluteX="0dp"
-        tools:text="Enter Password" />
+        tools:layout_editor_absoluteX="0dp" />
 
     <Button
         android:id="@+id/Button"
